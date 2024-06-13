@@ -1,0 +1,70 @@
+  mc-pub:
+    image: itzg/minecraft-server
+    container_name: mc-pub
+    environment:
+      SERVER_NAME: "Minecraft Public"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+    volumes:
+      - mc-pub:/data
+    ports:
+      - '25565:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+  mc-pmon:
+    image: itzg/minecraft-server:java8-multiarch
+    container_name: mc-pmon
+    environment:
+      SERVER_NAME: "Minecraft Pixelmon"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      CF_API_KEY: # get an API key from auto curse forge and put a $ before every $
+      CF_SLUG: the-pixelmon-modpack
+      CF_FILENAME_MATCHER: "9.1.11"
+      MEMORY: 4G
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+    volumes:
+      - mc-pmon:/data
+    ports:
+      - '25564:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+  mc-priv:
+    image: itzg/minecraft-server
+    container_name: mc-priv
+    environment:
+      SERVER_NAME: "Minecraft Private"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      ENABLE_WHITELIST: true
+      ENFORCE_WHITELIST: true
+      WHITELIST: "YourMCusername,YourfriendsMCusername"
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+        /op YourfriendsMCusername
+        /gamerule drowningDamage false
+        /gamerule keepInventory true
+    volumes:
+      - mc-priv:/data
+    ports:
+      - '25563:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+volumes:
+  mc-pub:
+    external: true
+  mc-priv:
+    external: true
+  mc-pmon:
+    external: true
+```

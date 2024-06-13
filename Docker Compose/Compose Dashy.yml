@@ -1,0 +1,13 @@
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+	environment:
+      - PUID=1000
+      - PGID=1000
+      - NODE_ENV=production
+    volumes:
+      - /home/user/dashy/conf.yml:/app/user-data/conf.yml
+    ports:
+      - '8888:8080'
+    restart: unless-stopped

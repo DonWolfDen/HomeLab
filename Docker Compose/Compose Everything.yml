@@ -1,0 +1,425 @@
+services:
+# Cloudflared Tunnel
+  tunnel: 
+    container_name: cloudflared-tunnel 
+    image: cloudflare/cloudflared 
+    restart: unless-stopped 
+    command: tunnel run 
+    env_file:
+      - stack.env
+#    environment:
+#      - TUNNEL_TOKEN=mytokenfromcloudflare-com
+
+# Portainer
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - '8000:8000'
+      - '9443:9443'
+    restart: always
+
+    
+# Plex Media Server
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - VERSION=docker
+      - PLEX_CLAIM= # get a claim code from https://www.plex.tv/claim/
+    volumes:
+      - plex:/config
+      - /mnt/plex:/data
+    devices:
+      - /dev/dri:/dev/dri
+    network_mode: host
+    restart: unless-stopped
+
+# Heimdall Dashboard
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - heimdall:/config
+    ports:
+      - '8088:80'
+      - '4433:443'
+    restart: unless-stopped
+
+# Dashy
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+	environment:
+      - PUID=1000
+      - PGID=1000
+      - NODE_ENV=production
+    volumes:
+      - /home/user/dashy/conf.yml:/app/user-data/conf.yml
+    ports:
+      - '8888:8080'
+    restart: unless-stopped
+
+# Arr Media Suite
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - prowlarr:/config
+    ports:
+      - '9696:9696'
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - sonarr:/config
+      - /mnt/plex/Shows:/shows
+      - /mnt/plex/Downloads:/downloads
+    ports:
+      - '8989:8989'
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - radarr:/config
+      - /mnt/plex/Movies:/movies
+      - /mnt/plex/Downloads:/downloads
+    ports:
+      - '7878:7878'
+    restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - lidarr:/config
+      - /mnt/plex/Music:/music
+      - /mnt/plex/Downloads:/downloads
+    ports:
+      - '8686:8686'
+    restart: unless-stopped
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - bazarr:/config
+      - /mnt/plex/Movies:/movies
+      - /mnt/plex/Shows:/shows
+    ports:
+      - '6767:6767'
+    restart: unless-stopped
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/New_York
+      - PORT=5055 #optional
+    ports:
+      - 5055:5055
+    volumes:
+      - overseerr:/app/config
+    restart: unless-stopped
+  tdarr:  
+    container_name: tdarr  
+    image: ghcr.io/haveagitgat/tdarr:latest  
+    restart: unless-stopped  
+    network_mode: bridge  
+    ports:  
+      - 8265:8265 # webUI port  
+      - 8266:8266 # server port  
+    environment:  
+      - TZ=America/New_York  
+      - PUID=1000  
+      - PGID=1000  
+      - UMASK_SET=002  
+      - serverIP= # docker host IP
+      - serverPort=8266  
+      - webUIPort=8265  
+      - internalNode=true  
+      - inContainer=true  
+      - ffmpegVersion=6  
+      - nodeName= # docker host hostname  
+    volumes:  
+      - tdarr_server:/app/server  
+      - tdarr_configs:/app/configs  
+      - tdarr_logs:/app/logs  
+      - /mnt/plex:/media  
+      - /transcode_cache:/temp
+
+# Nextcloud
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - nextcloud:/config
+      - /mnt/nextcloud/data:/data
+    ports:
+      - '4443:443'
+    restart: unless-stopped
+
+# Minecraft
+  mc-pub:
+    image: itzg/minecraft-server
+    container_name: mc-pub
+    environment:
+      SERVER_NAME: "Minecraft Public"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+    volumes:
+      - mc-pub:/data
+    ports:
+      - '25565:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+  mc-pmon:
+    image: itzg/minecraft-server:java8-multiarch
+    container_name: mc-pmon
+    environment:
+      SERVER_NAME: "Minecraft Pixelmon"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      CF_API_KEY: # get an API key from auto curse forge and put a $ before every $
+      CF_SLUG: the-pixelmon-modpack
+      CF_FILENAME_MATCHER: "9.1.11"
+      MEMORY: 4G
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+    volumes:
+      - mc-pmon:/data
+    ports:
+      - '25564:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+  mc-priv:
+    image: itzg/minecraft-server
+    container_name: mc-priv
+    environment:
+      SERVER_NAME: "Minecraft Private"
+      EULA: true
+      SNOOPER_ENABLED: false
+      ALLOW_CHEATS: true
+      ENABLE_WHITELIST: true
+      ENFORCE_WHITELIST: true
+      WHITELIST: "YourMCusername,YourfriendsMCusername"
+      RCON_CMDS_STARTUP:  |-
+        /op YourMCusername
+        /op YourfriendsMCusername
+        /gamerule drowningDamage false
+        /gamerule keepInventory true
+    volumes:
+      - mc-priv:/data
+    ports:
+      - '25563:25565'
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
+# Uptime Kuma
+  uptime-kuma:
+    image: louislam/uptime-kuma
+    container_name: kuma
+    volumes:
+      - kuma:/app/data
+    ports:
+      - '3001:3001'
+    restart: always
+    
+# Ollama WebUI
+  ollama:
+    volumes:
+      - ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - count: all
+              capabilities: [gpu]
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    ports:
+      - 3030:8080
+    environment:
+      - 'OLLAMA_BASE_URL=http://ollama:11434'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    
+# SearXNG
+  caddy:
+    container_name: caddy
+    image: docker.io/library/caddy:2-alpine
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /etc/docker/searxng-docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data:rw
+      - caddy-config:/config:rw
+    environment:
+      - SEARXNG_HOSTNAME=${SEARXNG_HOSTNAME:-http://localhost:8844}
+      - SEARXNG_TLS=${LETSENCRYPT_EMAIL:-internal}
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  redis:
+    container_name: redis
+    image: cgr.dev/chainguard/valkey:latest
+    command: --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data:/data
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - searxng
+    ports:
+      - "8844:8080"
+    volumes:
+      - /etc/docker/searxng-docker/searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+networks:
+# SearXNG
+  searxng:
+
+volumes:
+# Portainer
+  portainer_data
+    external: true
+# Plex Media Server
+  plex:
+    external: true
+# Heimdall Dashboard
+  heimdall:
+    external: true
+# Arr Media Suite
+  sonarr:
+    external: true
+  radarr:
+    external: true
+  lidarr:
+    external: true
+  bazarr:
+    external: true
+  prowlarr:
+    external: true
+  overseerr:
+    external: true
+  tdarr_server:
+    external: true
+  tdarr_configs:
+    external: true
+  tdarr_logs:
+    external: true
+# Minecraft
+  mc-pub:
+    external: true
+  mc-priv:
+    external: true
+  mc-pmon:
+    external: true
+# Nextcloud
+  nextcloud:
+    external: true
+# Uptime Kuma
+  kuma:
+    external: true
+# Ollama WebUI
+  ollama:
+    external: true
+  open-webui:
+    external: true
+# SearxNG
+  caddy-data:
+    external: true
+  caddy-config:
+    external: true
+  valkey-data:
+    external: true
