@@ -2,13 +2,10 @@
 
 ## Get the current date as variable.
 time="$(date +%m-%d-%Y-%H-%M)"
-
 ## Prompt for the source file path
 read -p "Enter the source path to backup: " source
-
 ## Prompt for the destination file path
 read -p "Enter the destination path to backup to: " destination
-
 ## Get the script name and host name as a string
 filename="$(basename $0)-$HOSTNAME"
 

@@ -1,0 +1,1 @@
+^+v::Send {Raw}%Clipboard%

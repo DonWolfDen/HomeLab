@@ -1,0 +1,10 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\AutoDiscover]
+"PreferLocalXML"=dword:00000000
+"ExcludeHttpRedirect"=dword:00000000
+"ExcludeHttpsAutodiscoverDomain"=dword:00000000
+"ExcludeHttpsRootDomain"=dword:00000000
+"ExcludeScpLookup"=dword:00000000
+"ExcludeSrvRecord"=dword:00000000
+"ExcludeExplicitO365Endpoint"=dword:00000001
