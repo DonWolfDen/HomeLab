@@ -7,4 +7,4 @@ services:
     env_file:
       - stack.env
 #    environment:
-#      - TUNNEL_TOKEN=mytokenfromcloudflare-com
+#      - TUNNEL_TOKEN= ## mytokenfromcloudflare-com

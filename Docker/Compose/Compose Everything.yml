@@ -8,7 +8,7 @@ services:
     env_file:
       - stack.env
 #    environment:
-#      - TUNNEL_TOKEN=mytokenfromcloudflare-com
+#      - TUNNEL_TOKEN= ## mytokenfromcloudflare-com
 
 # Portainer
   portainer:
@@ -32,7 +32,7 @@ services:
       - PGID=1000
       - TZ=America/New_York
       - VERSION=docker
-      - PLEX_CLAIM= # get a claim code from https://www.plex.tv/claim/
+      - PLEX_CLAIM= ## get a claim code from https://www.plex.tv/claim/
     volumes:
       - plex:/config
       - /mnt/plex:/data
@@ -164,13 +164,13 @@ services:
       - PUID=1000  
       - PGID=1000  
       - UMASK_SET=002  
-      - serverIP= # docker host IP
+      - serverIP= ## docker host IP
       - serverPort=8266  
       - webUIPort=8265  
       - internalNode=true  
       - inContainer=true  
       - ffmpegVersion=6  
-      - nodeName= # docker host hostname  
+      - nodeName= ## docker host hostname  
     volumes:  
       - tdarr_server:/app/server  
       - tdarr_configs:/app/configs  
@@ -220,7 +220,7 @@ services:
       SNOOPER_ENABLED: false
       ALLOW_CHEATS: true
       MOD_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: # get an API key from auto curse forge and put a $ before every $
+      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
       CF_SLUG: the-pixelmon-modpack
       CF_FILENAME_MATCHER: "9.1.11"
       MEMORY: 4G

@@ -12,13 +12,13 @@ services:
       - PUID=1000  
       - PGID=1000  
       - UMASK_SET=002  
-      - serverIP= # docker host IP
+      - serverIP= ## docker host IP
       - serverPort=8266  
       - webUIPort=8265  
       - internalNode=true  
       - inContainer=true  
       - ffmpegVersion=6  
-      - nodeName= # docker host hostname  
+      - nodeName= ## docker host hostname  
     volumes:  
       - tdarr_server:/app/server  
       - tdarr_configs:/app/configs  

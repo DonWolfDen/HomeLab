@@ -24,7 +24,7 @@
       SNOOPER_ENABLED: false
       ALLOW_CHEATS: true
       MOD_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: # get an API key from auto curse forge and put a $ before every $
+      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
       CF_SLUG: the-pixelmon-modpack
       CF_FILENAME_MATCHER: "9.1.11"
       MEMORY: 4G
