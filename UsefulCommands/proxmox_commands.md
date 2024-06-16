@@ -36,17 +36,12 @@ sed -i.backup -z "s/res === null || res === undefined || \!res || res\n\t\t\t.da
 ```sh
 ls -l /dev/disk/by-id/
 qm set <VM_ID> -scsi<#> /dev/disk/by-id/<DISK ID FROM ABOVE LINE>
-```
-
-## Attach Z1-Pool
-```sh
-qm set 1213 -scsi2 /dev/disk/by-id/ata-Hitachi_HDS722020ALA330_JK11A8B9J0U57F
+qm set 1213 -scsi2 /dev/disk/by-id/ata-Hitachi_HDS723020FKF00_JKF47LB9J0U34G
 ```
 
 ## Add SMB share
 ```sh
 pvesm add cifs <volume> --server <server IP> --share <shared name> --username <username> --password
-
 pvesm add cifs ProxBackups --server 192.168.1.200 --share ProxBackups --username Administrator --password
 ```
 
