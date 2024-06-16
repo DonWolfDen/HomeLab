@@ -19,3 +19,16 @@ powercfg -h off
 ```pwsh
 Rename-Computer -NewName "MyPC-01"
 ```
+<<<<<<< HEAD
+=======
+## Install Chocolatey CLI package manager
+```pwsh
+Set-ExecutionPolicy AllSigned &&
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+## Print a Directory List
+```pwsh
+dir > filename.txt
+cmd /r dir /b > filename.txt
+```
+>>>>>>> dbc20c7680153cdc40b18194f648591b7dec5943
