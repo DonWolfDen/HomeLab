@@ -14,3 +14,8 @@ tar -xvpzf /mnt/WolfLibrary/Backup/backup.tar.gz
 ```sh
 sudo du -sh /* --one-file-system
 ```
+## Install Docker
+```
+curl -fsSL https://get.docker.com -o ~/scripts/get-docker.sh
+sh get-docker.sh
+```
