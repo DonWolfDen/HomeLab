@@ -24,12 +24,7 @@ sudo bash kasm_release/install.sh -L 8443
 ```
 
 ## Uninstall Kasm
-Create script
-```nano ~/uninstall_kasm.sh ```
-Paste in commands
 ```sh
-#!/bin/bash
-
 /opt/kasm/current/bin/stop
 docker rm -f $(sudo docker container ls -qa --filter="label=kasm.kasmid")
 export KASM_UID=$(id kasm -u)
@@ -49,5 +44,3 @@ rm -rf /opt/kasm/
 deluser kasm_db
 deluser kasm
 ```
-Make script executable and run it
-```sudo chmod +x ~/uninstall_kasm.sh && sudo bash ~/uninstall_kasm.sh ```
