@@ -67,4 +67,3 @@ volumes:
     external: true
   mc-pmon:
     external: true
-```
