@@ -1,23 +1,23 @@
 #!/bin/bash
 
-## WIP: THIS NEEDS TESTED AND FIXED
+# Declare variables
+backup_file="/etc/resolv.conf.bak"
+config_file="/etc/resolv.conf"
 
 # Prompt the user for the domain name
-read -p "Enter the local domain name: " domain
+read -p "Enter the local domain name (mydomain.local): " domain
 
-# Prompt the user for the primary DNS server IP
-read -p "Enter the primary DNS server IP: " dns1
-read -p "Enter the secondary DNS server IP (optional): " dns2
+# Prompt the user for the nameserver addresses
+read -p "Enter the primary DNS server IP (1.1.1.1): " dns1
+read -p "Enter the secondary DNS server IP (1.0.0.1): " dns2
 
-# Create a backup of the existing /etc/resolv.conf
-sudo cp /etc/resolv.conf /etc/resolv.conf.bak
+# Create a .bak file of /etc/resolv.conf
+cp $config_file $backup_file
 
-# Empty the existing /etc/resolv.conf
-sudo echo "" > /etc/resolv.conf
-
-# Add desired configuration to /etc/resolv.conf
-sudo echo "search $domain" >> /etc/resolv.conf
-sudo echo "nameserver $dns1" >> /etc/resolv.conf
-[ -n "$dns2" ] && sudo echo "nameserver $dns2" >> /etc/resolv.conf
-
-echo "Successfully updated DNS settings in /etc/resolv.conf (backup created: /etc/resolv.conf.bak)"
+# Replace the values in the existing /etc/resolv.conf with the new domain and server IPs
+cat > $config_file <<EOF
+domain $domain
+search $domain
+nameserver $dns1
+nameserver $dns2
+EOF
