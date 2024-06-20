@@ -1,0 +1,36 @@
+services:
+  tunnel: 
+    container_name: cloudflared-tunnel 
+    image: cloudflare/cloudflared 
+    restart: unless-stopped 
+    command: tunnel run 
+    env_file:
+      - stack.env
+    #environment:
+      #- TUNNEL_TOKEN= ## mytokenfromcloudflare-com
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+    environment:
+      TZ: 'America/New_York'
+      #WEBPASSWORD: 'set a secure password here or it will be random'
+    volumes:
+      - '~/etc-pihole:/etc/pihole'
+      - '~/etc-dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
+    services:
+  uptime-kuma:
+    image: louislam/uptime-kuma
+    container_name: kuma
+    volumes:
+      - kuma:/app/data
+    ports:
+      - '3001:3001'
+    restart: always
+volumes:
+  kuma:
+    external: true
