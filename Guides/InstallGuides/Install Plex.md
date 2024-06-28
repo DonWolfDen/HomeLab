@@ -9,8 +9,8 @@
 ## create smb credentials file, secure it ##
 
 ```sh
-echo -e "username=$SMBUSER\npassword=$SMBPASS" > ~/.smbcred' | sudo tee -a /etc/fstab &&
-sudo chmod 600 ~/.smbcred' | sudo tee -a /etc/fstab
+echo -e "username=$SMBUSER\npassword=$SMBPASS" > ~/.smbcred &&
+sudo chmod 600 ~/.smbcred
 ```
 
 ## mount network shared media folders ##
