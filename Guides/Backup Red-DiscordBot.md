@@ -1,4 +1,4 @@
-# Backup and restore RedBotDiscord
+# Backup and restore Red-DiscordBot
 
 - Take note of the installed cogs and cog repositories with [p]cogs, then [p]load downloader, then [p]repo list.
 - Stop the bot, ideally with [p]shutdown.

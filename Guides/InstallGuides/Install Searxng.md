@@ -1,4 +1,4 @@
-# *A self-hosted, secure search engine that aggregates results from multiple search engines*
+# *A self-hosted, no-tracking search engine that aggregates results from multiple search engines*
 https://github.com/searxng
 ## Install Debian
 ## Install Docker
