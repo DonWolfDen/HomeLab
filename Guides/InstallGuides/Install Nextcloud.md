@@ -1,48 +1,39 @@
-# Install Nextcloud
+# *A fully featured cloud collaboration and document sharing platform*
+https://github.com/Nextcloud
+## Install Proxmox
+Download Nextcloud Turnkey container
+```sh
+pveam download local debian-12-turnkey-nextcloud_18.0-1_amd64.tar.gz
+```
+Create ZFS pool in Proxmox gui
 
-### Create ZFS pool in proxmox
-$TANK = name of zfs pool
-
-### Create user directories
+Create user directories
 ```sh
 zfs list
 zpool list
-zfs create $TANK/nextcloud &&
-zfs create $TANK/nextcloud/admin &&
-zfs create $TANK/nextcloud/$USER1 &&
-zfs create $TANK/nextcloud/$USER2
+
+zfs create $zfspool/nextcloud &&
+zfs create $zfspool/nextcloud/admin &&
+zfs create $zfspool/nextcloud/$user1 &&
+zfs create $zfspool/nextcloud/$user2
 ```
+## Install Cloudflared
+## Install Nextcloud
 
-### Create Cloudflare Tunnels
-- Debian standard container
-- 8gb disk, 1 core, 512mb ram
-
-### Install Cloudflare tunnel in container
-```sh
-apt update && apt upgrade -y && apt install -y sudo curl &&
-
-curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && 
-
-sudo dpkg -i cloudflared.deb
-```
-
-Create tunnel and copy service install code
-```sh
-sudo cloudflared service install #RANDOMLY-GENERATED-CODE
-```
-### Create public hostname for Nextcloud
-- Enter desired $IPADDRESS for Nextcloud container
-- Skip tls verification
-
-### Create Nextcloud turnkey container
+Create Nextcloud turnkey container
 - uncheck "unprivledged" so the container is privledged
-- 16gb disk, 2 core, 1gb ram
-- edit features, check nesting enabled
-### Follow install prompts
-- Defaults
-- Set domain to Cloudtunnel domain
+- 16gb disk, 2 core, 1gb ram minimum
+- options > edit features > check nesting enabled
 
-### Set static IP to cloudtunnel and reboot network
+Boot and follow install prompts
+- Leave Defaults
+- Set domain name to be used in Cloudflared tunnel
+
+Update packages
+
+```sudo apt update && sudo apt upgrade -y```
+
+Set static IP and restart networking
 
 ```nano /etc/network/interfaces```
 
@@ -50,14 +41,14 @@ sudo cloudflared service install #RANDOMLY-GENERATED-CODE
 # The primary network interface
 allow-hotplug ens18
 iface ens18 inet static
-        address $IPADDRESS # 192.168.1.10/24
-        gateway $GATEWAY # 192.168.1.1
+        address 192.168.1.10/24
+        gateway 192.168.1.1
 ```
 
 ```systemctl restart networking```
 
 
-## Set trusted domains in nextcloud ##
+Set trusted domains in Nextcloud
 
 ```nano /var/www/nextcloud/config/config.php```
 
@@ -65,38 +56,30 @@ iface ens18 inet static
     array (
 	0 => 'localhost',
 1 => 'nextcloud.domain.com',
-2 => '$IPADDRESS',
+2 => '192.168.1.10',
     ),
 ```
+Access gui via internal IP or domain and create users
 
-## Access gui via internal IP or Cloud tunnel
-- Create new $USERS
-## Delete all files of any users that logged in
-
-## make sure no users have files
+Delete all files of any users that logged in then shutdown
 ```sh
-cd /var/www/nextcloud-data/$USER/files
-la -l
+cd /var/www/nextcloud-data/$user1/files
+rm -rf ./*
 
 shutdown now
 ```
-
-PROXMOX SHELL
+Create ZFS mountpoints in Proxmox shell
 
 ```nano /etc/pve/lxc/$CONTAINERID.conf```
 
 ```
-mp0: /$TANK/nextcloud/admin,mp=/var/www/nextcloud-data/admin/files
-mp1: /$TANK/nextcloud/$USERS,mp=/var/www/nextcloud-data/$USERS/files
-mp2: /$TANK/nextcloud/$USERS,mp=/var/www/nextcloud-data/$USERS/files
+mp0: /$zfspool/nextcloud/admin,mp=/var/www/nextcloud-data/admin/files
+mp1: /$zfspool/nextcloud/$user1,mp=/var/www/nextcloud-data/$user1/files
+mp2: /$zfspool/nextcloud/$USERS,mp=/var/www/nextcloud-data/$user2/files
 ```
-
-NEXTCLOUD SHELL
-
+Boot Nextcloud and set mountpoint permissions
 ```sh
 chown -R www-data:www-data /var/www/nextcloud-data/admin/files &&
 chown -R www-data:www-data /var/www/nextcloud-data/$USER1/files &&
-chown -R www-data:www-data /var/www/nextcloud-data/$USER2/files
+chown -R www-data:www-data /var/www/nextcloud-data/$user2/files
 ```
-
-___

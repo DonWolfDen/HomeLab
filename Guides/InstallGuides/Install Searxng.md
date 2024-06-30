@@ -1,9 +1,9 @@
-# Install Searxng
-
-# [[Install Debian]]
-# [[Install Docker]]
-# [[Install Portainer]]
-# Install Searxng
+# *A self-hosted, no-tracking search engine that aggregates results from multiple search engines*
+https://github.com/searxng
+## Install Debian
+## Install Docker
+## Install Portainer
+## Install Searxng
 
 ### Pull files from git
 ```sh
@@ -40,15 +40,12 @@ search:
   safe_search: 0    # 0: None, 1: Moderate, 2: Strict
 ```
 
-### Create volumes in portainer
-caddy-data
-caddy-config
-valkey-data
+Create volumes in portainer
+- caddy-data
+- caddy-config
+- valkey-data
 
-### Create stack
-Paste in [[Compose Searxng]]
+## Compose Searxng
 Add environment variables
-```
-SEARXNG_HOSTNAME=<host>
-LETSENCRYPT_EMAIL=<email>
-```
+- SEARXNG_HOSTNAME=$localIPaddress
+- LETSENCRYPT_EMAIL=$emailToCreateCertificates
