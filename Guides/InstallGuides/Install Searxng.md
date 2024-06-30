@@ -5,17 +5,17 @@ https://github.com/searxng
 ## Install Portainer
 ## Install Searxng
 
-### Pull files from git
+Pull files from git
 ```sh
 cd /etc/docker/
 sudo git clone https://github.com/searxng/searxng-docker.git
 ```
-### Change default secret
+Change default secret
 ```sh
 cd /etc/docker/searxng-docker
 sudo sed -i "s|ultrasecretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
 ```
-### Fix html method so back button works
+Fix html method so back button works
 ```sh
 sudo nano searxng/settings.yml
 ```
@@ -24,7 +24,8 @@ Under the server: heading, add this variable
 server:
   method: "GET"
 ```
-### Add more settings to settings.yml
+## Add more settings to settings.yml
+
 Add a root heading called general:
 ```yml
 general:
