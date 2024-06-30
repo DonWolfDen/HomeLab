@@ -2,14 +2,12 @@
 https://github.com/docker
 ## Install Debian
 ## Install Docker
-Install prerequisites: curl
-```sh
-sudo apt update && 
-sudo apt upgrade -y && 
-sudo apt install curl -y
-```
 Download and run official Docker install script
 ```sh
 curl -fsSL https://get.docker.com -o ~/get-docker.sh &&
 sh get-docker.sh
+```
+Add user to Docker group so sudo isn't needed
+```sh
+sudo usermod -aG docker $username
 ```

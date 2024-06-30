@@ -1,4 +1,5 @@
 # *A fully featured, Docker based platform to stream desktops and apps to web browser*
+https://github.com/kasmtech
 ## Install Debian
 ## Install Kasm
 Set up swap partition
@@ -14,11 +15,11 @@ Download files/install script and run
 ```sh
 wget https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz &&
 tar -xf kasm_release*.tar.gz &&
-sudo bash kasm_release/install.sh
+sudo sh kasm_release/install.sh
 ```
 You can change the default port with -L :
 ```sh
-sudo bash kasm_release/install.sh -L 8443
+sudo sh kasm_release/install.sh -L 8443
 ```
 
 ## Uninstall Kasm

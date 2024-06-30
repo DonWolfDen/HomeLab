@@ -2,13 +2,13 @@
 https://github.com/danielmiessler/fabric
 ## Install Debian
 ## Install Ollama
-## Install Fabric AI
-Install prerequisites: pipx and git
+## Install required packages
 ```sh
 sudo apt update && 
 sudo apt upgrade -y && 
 sudo apt install pipx git -y
 ```
+## Install Fabric AI
 Download install script and run
 ```sh
 git clone https://github.com/danielmiessler/fabric.git ~/fabric &&

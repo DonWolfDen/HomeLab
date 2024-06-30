@@ -2,12 +2,6 @@
 https://github.com/cloudflare/cloudflared
 ## Install Debian
 ## Install CloudFlared
-Install prerequisites: curl
-```sh
-sudo apt update && 
-sudo apt upgrade -y && 
-sudo apt install curl -y
-```
 Go to Cloudflare.com > Zero Trust > Networks > Tunnels > Create a Tunnel > Select Debian Install > Copy install code
 ```sh
 curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && 

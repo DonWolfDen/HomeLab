@@ -1,4 +1,5 @@
 # *A fully featured cloud collaboration and document sharing platform*
+https://github.com/Nextcloud
 ## Install Proxmox
 Download Nextcloud Turnkey container
 ```sh
@@ -6,12 +7,6 @@ pveam download local debian-12-turnkey-nextcloud_18.0-1_amd64.tar.gz
 ```
 Create ZFS pool in Proxmox gui
 
-Set temporary environment variables (replace quotes with your variables)
-```sh
-zfspool='name of ZFS pool'
-user1='first username'
-user2='second username'
-```
 Create user directories
 ```sh
 zfs list
@@ -30,11 +25,15 @@ Create Nextcloud turnkey container
 - 16gb disk, 2 core, 1gb ram minimum
 - options > edit features > check nesting enabled
 
-Follow install prompts
+Boot and follow install prompts
 - Leave Defaults
-- Set domain name
+- Set domain name to be used in Cloudflared tunnel
 
-Set static IP reboot network
+Update packages
+
+```sudo apt update && sudo apt upgrade -y```
+
+Set static IP and restart networking
 
 ```nano /etc/network/interfaces```
 

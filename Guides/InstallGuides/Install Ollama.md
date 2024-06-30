@@ -1,17 +1,7 @@
-# Install Ollama
-
-# [[Install Debian]]
-# [[Install Docker]]
-# [[Install Portainer]]
-# Install Ollama with OpenWebUI
-## [[Compose OpenWebUI]]
-## Add models to Ollama container
-```
-docker exec -it ollama ollama pull <model:tag>
-```
-
-## Install Ollama Without Docker/OpenWebUI
-
+# *A platform to host AI large language models*
+https://github.com/ollama
+## Install Debian
+## Install Ollama
 ```sh
 curl -fsSL https://ollama.com/install.sh | sh
 ```
@@ -23,8 +13,6 @@ Run a model
 ```sh
 ollama run <model>
 ```
-
-___
 ## Uninstall Ollama
 ```sh
 systemctl stop ollama

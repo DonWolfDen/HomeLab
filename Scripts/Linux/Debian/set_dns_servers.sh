@@ -21,3 +21,5 @@ search $domain
 nameserver $dns1
 nameserver $dns2
 EOF
+# Restart the network service to apply the new configuration
+systemctl restart networking
