@@ -5,6 +5,8 @@ services:
     container_name: gluetun
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     ports:
       - 6881:6881 # qbittorrent
       - 6881:6881/udp # qbittorrent
@@ -14,7 +16,6 @@ services:
       - 7878:7878 # Radarr
       - 8686:8686 # Lidarr
       - 6767:6767 # Bazarr
-      - 5055:5055 # Overseerr  
     volumes:
       - gluetun:/gluetun
     env_file:
@@ -114,12 +115,13 @@ services:
   overseerr:
     image: sctx/overseerr:latest
     container_name: overseerr
-    network_mode: "service:gluetun"
     environment:
       - LOG_LEVEL=debug
       - TZ=America/New_York
     volumes:
       - overseerr:/app/config
+    ports:
+    - 5055:5055
     restart: unless-stopped
 
 volumes:
