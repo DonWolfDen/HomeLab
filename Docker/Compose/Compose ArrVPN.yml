@@ -16,6 +16,7 @@ services:
       - 7878:7878 # Radarr
       - 8686:8686 # Lidarr
       - 6767:6767 # Bazarr
+      - 8191:8191 # FlareSolverr
     volumes:
       - gluetun:/gluetun
     env_file:
@@ -122,6 +123,17 @@ services:
       - overseerr:/app/config
     ports:
     - 5055:5055
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=America/New_York
     restart: unless-stopped
 
 volumes:
