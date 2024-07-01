@@ -8,6 +8,8 @@ services:
       - /etc/docker/searxng-docker/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data:rw
       - caddy-config:/config:rw
+    env_file:
+      - stack.env
     environment:
       - SEARXNG_HOSTNAME=${SEARXNG_HOSTNAME:-http://localhost:8844}
       - SEARXNG_TLS=${LETSENCRYPT_EMAIL:-internal}

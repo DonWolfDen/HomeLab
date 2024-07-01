@@ -1,6 +1,7 @@
 # *A platform to stream and share downloaded movies, music and TV to any device*
 https://github.com/plexinc
 ## Install Debian
+If using a Proxmox LXC, make sure it is privileged when creating, then go to options > features > enable nesting and CIFS
 ## Install Docker
 ## Install Portainer
 ## Install Plex
