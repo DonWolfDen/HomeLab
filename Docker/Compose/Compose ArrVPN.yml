@@ -25,7 +25,7 @@ services:
       - VPN_SERVICE_PROVIDER=protonvpn
 #      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
 #      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-      - SERVER_COUNTRIES=Switzerland,Sweden,Iceland
+      - SERVER_COUNTRIES=United States
       - TZ=America/New_York
       - UPDATER_PERIOD=24h
 
