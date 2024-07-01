@@ -6,6 +6,8 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "80:80/tcp"
+    env_file:
+      - stack.env
     environment:
       TZ: 'America/New_York'
       #WEBPASSWORD: 'set a secure password here or it will be random'

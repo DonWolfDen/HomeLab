@@ -1,19 +1,63 @@
+version: "3"
 services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 6881:6881 # qbittorrent
+      - 6881:6881/udp # qbittorrent
+      - 8085:8085 # qbittorrent
+      - 9696:9696 # Prowlarr
+      - 8989:8989 # Sonarr
+      - 7878:7878 # Radarr
+      - 8686:8686 # Lidarr
+      - 6767:6767 # Bazarr
+      - 5055:5055 # Overseerr  
+    volumes:
+      - gluetun:/gluetun
+    env_file:
+      - stack.env
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+#      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
+#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
+      - TZ=America/New_York
+      - UPDATER_PERIOD=24h
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - WEBUI_PORT=8085
+    volumes:
+      - qbittorrent:/config
+      - /mnt/plex/Downloads:/downloads
+    depends_on:
+      - gluetun
+    restart: always
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    network_mode: "service:gluetun"
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
     volumes:
       - prowlarr:/config
-    ports:
-      - '9696:9696'
     restart: unless-stopped
+
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
+    network_mode: "service:gluetun"
     environment:
       - PUID=1000
       - PGID=1000
@@ -22,12 +66,12 @@ services:
       - sonarr:/config
       - /mnt/plex/Shows:/shows
       - /mnt/plex/Downloads:/downloads
-    ports:
-      - '8989:8989'
     restart: unless-stopped
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
+    network_mode: "service:gluetun"
     environment:
       - PUID=1000
       - PGID=1000
@@ -36,12 +80,12 @@ services:
       - radarr:/config
       - /mnt/plex/Movies:/movies
       - /mnt/plex/Downloads:/downloads
-    ports:
-      - '7878:7878'
     restart: unless-stopped
+
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
+    network_mode: "service:gluetun"
     environment:
       - PUID=1000
       - PGID=1000
@@ -50,12 +94,12 @@ services:
       - lidarr:/config
       - /mnt/plex/Music:/music
       - /mnt/plex/Downloads:/downloads
-    ports:
-      - '8686:8686'
     restart: unless-stopped
+
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
+    network_mode: "service:gluetun"
     environment:
       - PUID=1000
       - PGID=1000
@@ -64,22 +108,24 @@ services:
       - bazarr:/config
       - /mnt/plex/Movies:/movies
       - /mnt/plex/Shows:/shows
-    ports:
-      - '6767:6767'
     restart: unless-stopped
+
   overseerr:
     image: sctx/overseerr:latest
     container_name: overseerr
+    network_mode: "service:gluetun"
     environment:
       - LOG_LEVEL=debug
       - TZ=America/New_York
-      - PORT=5055 #optional
-    ports:
-      - 5055:5055
     volumes:
       - overseerr:/app/config
     restart: unless-stopped
+
 volumes:
+  gluetun:
+    external: true
+  qbittorrent:
+    external: true
   sonarr:
     external: true
   radarr:
@@ -89,4 +135,6 @@ volumes:
   bazarr:
     external: true
   prowlarr:
+    external: true
+  overseerr:
     external: true
