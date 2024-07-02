@@ -44,3 +44,8 @@ Type 'A' to confirm the installation
 ```pwsh
 Get-WUHistory
 ```
+
+## The Ultimate Windows Utility
+```pwsh
+iwr -useb https://christitus.com/win | iex
+```
