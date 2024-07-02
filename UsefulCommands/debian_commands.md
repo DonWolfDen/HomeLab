@@ -19,3 +19,17 @@ sudo du -sh /* --one-file-system
 curl -fsSL https://get.docker.com -o ~/scripts/get-docker.sh
 sh get-docker.sh
 ```
+
+## Update a Cloudflare Tunnel in Debian
+```sh
+curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb 
+```
+Restart the service:
+```sh
+sudo systemctl restart cloudflared.service
+```
+
+## Change the Timezone
+```sh
+sudo timedatectl set-timezone America/Detroit
+```
