@@ -24,3 +24,38 @@ Rename-Computer -NewName "MyPC-01"
 dir > filename.txt
 cmd /r dir /b > filename.txt
 ```
+
+## Manually install updates from PowerShell
+    Open Powershell as Administrator and enter this command;
+```pwsh
+Install-Module PSWindowsUpdate
+```
+    Type 'A' to accept and install all modules. Then enter this command to check for Windows updates;
+```pwsh
+Get-WindowsUpdate
+```
+This command will give you a list of updates and their KB number
+```pwsh
+Install-WindowsUpdate -KBArticleID $KBNUMBER
+```
+Type 'A' to confirm the installation
+
+(Optional) Type the following to view a list of previously installed updates
+```pwsh
+Get-WUHistory
+```
+
+## The Ultimate Windows Utility
+```pwsh
+iwr -useb https://christitus.com/win | iex
+```
+
+## Get BIOs Serial Number
+```pwsh
+ wmic bios get serialnumber 
+ ```
+
+ ## Unlock an AD account
+ ```pwsh
+unlock-adaccount $UserName 
+ ```
