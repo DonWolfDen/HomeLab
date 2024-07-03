@@ -49,3 +49,13 @@ Get-WUHistory
 ```pwsh
 iwr -useb https://christitus.com/win | iex
 ```
+
+## Get BIOs Serial Number
+```pwsh
+ wmic bios get serialnumber 
+ ```
+
+ ## Unlock an AD account
+ ```pwsh
+unlock-adaccount $UserName 
+ ```
