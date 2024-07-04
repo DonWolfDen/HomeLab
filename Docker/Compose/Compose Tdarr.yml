@@ -1,30 +1,35 @@
 services:
-  tdarr:  
-    container_name: tdarr  
-    image: ghcr.io/haveagitgat/tdarr:latest  
-    restart: unless-stopped  
-    network_mode: bridge  
-    ports:  
-      - 8265:8265 # webUI port  
-      - 8266:8266 # server port  
-    environment:  
-      - TZ=America/New_York  
-      - PUID=1000  
-      - PGID=1000  
-      - UMASK_SET=002  
-      - serverIP= ## docker host IP
-      - serverPort=8266  
-      - webUIPort=8265  
-      - internalNode=true  
-      - inContainer=true  
-      - ffmpegVersion=6  
-      - nodeName= ## docker host hostname  
-    volumes:  
-      - tdarr_server:/app/server  
-      - tdarr_configs:/app/configs  
-      - tdarr_logs:/app/logs  
-      - /mnt/plex:/media  
+  tdarr:
+    # Attributes
+    image: ghcr.io/haveagitgat/tdarr:latest
+    container_name: tdarr
+    restart: unless-stopped
+    # Network
+    network_mode: bridge
+    ports:
+      - 8265:8265 # webUI port
+      - 8266:8266 # server port
+    # Resources
+    volumes:
+      - tdarr_server:/app/server
+      - tdarr_configs:/app/configs
+      - tdarr_logs:/app/logs
+      - /mnt/plex:/media
       - /transcode_cache:/temp
+    # Variables
+    environment:
+      - TZ=America/New_York
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=002
+      - serverIP= ## docker host IP
+      - serverPort=8266
+      - webUIPort=8265
+      - internalNode=true
+      - inContainer=true
+      - ffmpegVersion=6
+      - nodeName= ## docker host hostname
+
 volumes:
   tdarr_server:
     external: true
