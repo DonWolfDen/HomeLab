@@ -1,16 +1,16 @@
 services:
-  heimdall:
+  bazarr:
     # Attributes
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
     restart: unless-stopped
     # Network
-    ports:
-      - '8088:80'
-      - '4433:443'
+    network_mode: service:gluetun
     # Resources
     volumes:
-      - heimdall:/config
+      - bazarr:/config
+      - /mnt/plex/Movies:/movies
+      - /mnt/plex/Shows:/shows
     # Variables
     environment:
       - PUID=1000
@@ -18,5 +18,5 @@ services:
       - TZ=America/New_York
 
 volumes:
-  heimdall:
+  bazarr:
     external: true

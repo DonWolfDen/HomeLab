@@ -1,13 +1,16 @@
 services:
   uptime-kuma:
+    # Attributes
     image: louislam/uptime-kuma
     container_name: kuma
-    volumes:
-      - kuma:/app/data
+    restart: always
+    # Network
     ports:
       - '3001:3001'
-    restart: always
+    # Resources
+    volumes:
+      - kuma:/app/data
+
 volumes:
   kuma:
     external: true
-    

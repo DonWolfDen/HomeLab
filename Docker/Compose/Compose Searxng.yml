@@ -1,13 +1,17 @@
 services:
   caddy:
-    container_name: caddy
+    # Attributes
     image: docker.io/library/caddy:2-alpine
-    network_mode: host
+    container_name: caddy
     restart: unless-stopped
+    # Network
+    network_mode: host
+    # Resources
     volumes:
       - /etc/docker/searxng-docker/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data:rw
       - caddy-config:/config:rw
+    # Variables
     env_file:
       - stack.env
     environment:
@@ -17,6 +21,7 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+    # Interaction
     logging:
       driver: "json-file"
       options:
@@ -24,20 +29,25 @@ services:
         max-file: "1"
 
   redis:
-    container_name: redis
+    # Attributes
     image: docker.io/valkey/valkey:7-alpine
-    command: valkey-server --save 30 1 --loglevel warning
+    container_name: redis
     restart: unless-stopped
+    # Network
     networks:
       - searxng
+    # Resources
     volumes:
       - valkey-data:/data
+    # Variables
     cap_drop:
       - ALL
     cap_add:
       - SETGID
       - SETUID
       - DAC_OVERRIDE
+    # Interaction
+    command: valkey-server --save 30 1 --loglevel warning
     logging:
       driver: "json-file"
       options:
@@ -45,15 +55,19 @@ services:
         max-file: "1"
 
   searxng:
-    container_name: searxng
+    # Attributes
     image: docker.io/searxng/searxng:latest
+    container_name: searxng
     restart: unless-stopped
+    # Network
     networks:
       - searxng
     ports:
       - "8844:8080"
+    # Resources
     volumes:
       - /etc/docker/searxng-docker/searxng:/etc/searxng:rw
+    # Variables
     environment:
       - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
     cap_drop:
@@ -62,6 +76,7 @@ services:
       - CHOWN
       - SETGID
       - SETUID
+    # Interaction
     logging:
       driver: "json-file"
       options:
@@ -78,4 +93,3 @@ volumes:
     external: true
   valkey-data:
     external: true
-    

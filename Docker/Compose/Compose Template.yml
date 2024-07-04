@@ -1,0 +1,90 @@
+services:
+  container:
+    # Attributes
+    image: repo/application:latest
+    container_name: container-name
+    restart: unless-stopped
+    pull_policy: always
+    depends_on:
+      - other-container
+    # Network
+    hostname: hostname
+    network_mode: mode:value
+    networks:
+      - other-network
+    ports:
+      - 0000:0000
+      - host-port:container-port
+    links:
+      - other-container
+    # Resources
+    volumes:
+      - host-volume:/container-path
+      - /path/on/host:/path/in/container
+    devices:
+      - /dev/net/tun:/dev/net/tun
+      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+              driver: nvidia
+              count: all
+              capabilities: [gpu]
+        limits:
+          memory: 2000M
+    # Variables
+    env_file:
+      - stack.env
+    environment:
+      BOOLEAN: true
+      VARIABLE: value
+      MULTILINE-VARIABLE: |-
+        /value one
+        /value two
+        /value three
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      - hostname:address
+    group_add:
+      - 1000
+      - group
+    cap_add:
+      - CAPABILITY
+    cap_drop:
+      - CAPABILITY
+    # Interaction
+    command: 'command -to overwrite dockerfile'
+    tty: true
+    stdin_open: true
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 1
+    healthcheck:
+      test: curl --fail -I http://localhost:0000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+
+networks:
+  other-network:
+    driver: bridge
+  other-network:
+    driver: bridge
+
+volumes:
+  host-volume:
+    external: true
+  host-volume:
+    external: true
+  host-volume:
+    external: true
+
+    # Attributes
+    # Network
+    # Resources
+    # Variables
+    # Interaction

@@ -1,26 +1,35 @@
+## UNTESTED, NEEDS WORK
 services:
   nc-db:
+    # Attributes
     image: mariadb:10.6
     restart: always
-    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    # Resources
     volumes:
       - nc-db:/var/lib/mysql
+    # Variables
     environment:
       - MYSQL_ROOT_PASSWORD="Maria123!"
       - MYSQL_PASSWORD="Maria123!"
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+    # Interaction
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
 
   nextcloud:
+    # Attributes
     image: nextcloud
     restart: always
+    # Network
     ports:
       - 8008:80
     links:
       - nc-db
+    # Resources
     volumes:
       - nextcloud:/var/www/html
       - /mnt/nextcloud:/data
+    # Variables
     environment:
       - MYSQL_PASSWORD="Maria123!"
       - MYSQL_DATABASE=nextcloud
@@ -28,6 +37,7 @@ services:
       - MYSQL_HOST=nc-db
 #      - NEXTCLOUD_DATA_DIR=/data
       - NEXTCLOUD_TRUSTED_DOMAINS="your.domain.com" # add your docker host IP with the port 8008
+
 volumes:
   nextcloud:
     external: true
@@ -36,18 +46,23 @@ volumes:
 
 #services:
 #  nextcloud:
+#    # Attributes
 #    image: lscr.io/linuxserver/nextcloud:latest
 #    container_name: nextcloud
+#    restart: unless-stopped
+#    # Network
+#    ports:
+#      - '4443:443'
+#    # Resources
+#    volumes:
+#      - nextcloud:/config
+#      - /mnt/nextcloud/data:/data
+#    # Variables
 #    environment:
 #      - PUID=1000
 #      - PGID=1000
 #      - TZ=America/New_York
-#    volumes:
-#      - nextcloud:/config
-#      - /mnt/nextcloud/data:/data
-#    ports:
-#      - '4443:443'
-#    restart: unless-stopped
+#
 #volumes:
 #  nextcloud:
 #    external: true

@@ -1,6 +1,16 @@
+services:
   mc-pub:
+    # Attributes
     image: itzg/minecraft-server
     container_name: mc-pub
+    restart: unless-stopped
+    # Network
+    ports:
+      - '25565:25565'
+    # Resources
+    volumes:
+      - mc-pub:/data
+    # Variables
     environment:
       SERVER_NAME: "Minecraft Public"
       EULA: true
@@ -8,16 +18,22 @@
       ALLOW_CHEATS: true
       RCON_CMDS_STARTUP:  |-
         /op YourMCusername
-    volumes:
-      - mc-pub:/data
-    ports:
-      - '25565:25565'
+    # Interaction
     tty: true
     stdin_open: true
-    restart: unless-stopped
+
   mc-pmon:
+    # Attributes
     image: itzg/minecraft-server:java8-multiarch
     container_name: mc-pmon
+    restart: unless-stopped
+    # Network
+    ports:
+      - '25564:25565'
+    # Resources
+    volumes:
+      - mc-pmon:/data
+    # Variables
     environment:
       SERVER_NAME: "Minecraft Pixelmon"
       EULA: true
@@ -30,16 +46,22 @@
       MEMORY: 4G
       RCON_CMDS_STARTUP:  |-
         /op YourMCusername
-    volumes:
-      - mc-pmon:/data
-    ports:
-      - '25564:25565'
+    # Interaction
     tty: true
     stdin_open: true
-    restart: unless-stopped
+
   mc-priv:
+    # Attributes
     image: itzg/minecraft-server
     container_name: mc-priv
+    restart: unless-stopped
+    # Network
+    ports:
+      - '25563:25565'
+    # Resources
+    volumes:
+      - mc-priv:/data
+    # Variables
     environment:
       SERVER_NAME: "Minecraft Private"
       EULA: true
@@ -48,18 +70,15 @@
       ENABLE_WHITELIST: true
       ENFORCE_WHITELIST: true
       WHITELIST: "YourMCusername,YourfriendsMCusername"
-      RCON_CMDS_STARTUP:  |-
+      RCON_CMDS_STARTUP: |-
         /op YourMCusername
         /op YourfriendsMCusername
         /gamerule drowningDamage false
         /gamerule keepInventory true
-    volumes:
-      - mc-priv:/data
-    ports:
-      - '25563:25565'
+    # Interaction
     tty: true
     stdin_open: true
-    restart: unless-stopped
+
 volumes:
   mc-pub:
     external: true

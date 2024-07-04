@@ -1,23 +1,27 @@
 services:
   plex:
+    # Attributes
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
-    group_add:
-      - '107'
+    restart: unless-stopped
+    # Network
+    network_mode: host
+    # Resources
+    volumes:
+      - plex:/config
+      - /mnt/plex:/data
+    devices:
+      - /dev/dri:/dev/dri
+    # Variables
     environment:
       - PUID=0
       - PGID=0
       - TZ=America/New_York
       - VERSION=docker
 #      - PLEX_CLAIM= ## get a claim code from https://www.plex.tv/claim/
-    volumes:
-      - plex:/config
-      - /mnt/plex:/data
-    devices:
-      - /dev/dri:/dev/dri
-    network_mode: host
-    restart: unless-stopped
+    group_add:
+      - '107'
+
 volumes:
   plex:
     external: true
-    

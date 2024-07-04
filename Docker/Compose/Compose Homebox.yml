@@ -1,11 +1,17 @@
-version: "3.4"
-
 services:
   homebox:
+    # Attributes
     image: ghcr.io/hay-kot/homebox:latest
 #   image: ghcr.io/hay-kot/homebox:latest-rootless
     container_name: homebox
     restart: always
+    # Network
+    ports:
+      - 3100:7745
+    # Resources
+    volumes:
+      - homebox-data:/data/
+    # Variables
     environment:
     - HBOX_LOG_LEVEL=info
     - HBOX_LOG_FORMAT=text
@@ -14,10 +20,6 @@ services:
     - HBOX_TZ=America/Detroit
     - ENV TZ="America/Detroit"
     - ENV TZ=America/Detroit
-    volumes:
-      - homebox-data:/data/
-    ports:
-      - 3100:7745
 
 volumes:
    homebox-data:

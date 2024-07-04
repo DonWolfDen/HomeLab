@@ -1,12 +1,10 @@
-version: "3"
 services:
   gluetun:
+    # Attributes
     image: qmcgaw/gluetun
     container_name: gluetun
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped
+    # Network
     ports:
       - 6881:6881 # qbittorrent
       - 6881:6881/udp # qbittorrent
@@ -17,8 +15,12 @@ services:
       - 8686:8686 # Lidarr
       - 6767:6767 # Bazarr
       - 8191:8191 # FlareSolverr
+    # Resources
     volumes:
       - gluetun:/gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    # Variables
     env_file:
       - stack.env
     environment:
@@ -28,113 +30,128 @@ services:
       - SERVER_COUNTRIES=United States
       - TZ=America/New_York
       - UPDATER_PERIOD=24h
+    cap_add:
+      - NET_ADMIN
 
   qbittorrent:
+    # Attributes
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
-    network_mode: "service:gluetun"
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    # Network
+    network_mode: service:gluetun
+    # Resources
+    volumes:
+      - qbittorrent:/config
+      - /mnt/plex/Downloads:/downloads
+    # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
       - WEBUI_PORT=8085
-    volumes:
-      - qbittorrent:/config
-      - /mnt/plex/Downloads:/downloads
-    depends_on:
-      - gluetun
-    restart: always
 
   prowlarr:
+    # Attributes
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: "service:gluetun"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+    restart: unless-stopped
+    # Network
+    network_mode: service:gluetun
+    # Resources
     volumes:
       - prowlarr:/config
-    restart: unless-stopped
-
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    network_mode: "service:gluetun"
+    # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
+
+  sonarr:
+    # Attributes
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    # Network
+    network_mode: service:gluetun
+    # Resources
     volumes:
       - sonarr:/config
       - /mnt/plex/Shows:/shows
       - /mnt/plex/Downloads:/downloads
-    restart: unless-stopped
-
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    network_mode: "service:gluetun"
+    # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
+
+  radarr:
+    # Attributes
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    # Network
+    network_mode: service:gluetun
+    # Resources
     volumes:
       - radarr:/config
       - /mnt/plex/Movies:/movies
       - /mnt/plex/Downloads:/downloads
-    restart: unless-stopped
-
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    network_mode: "service:gluetun"
+    # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
+
+  lidarr:
+    # Attributes
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    # Network
+    network_mode: service:gluetun
+    # Resources
     volumes:
       - lidarr:/config
       - /mnt/plex/Music:/music
       - /mnt/plex/Downloads:/downloads
-    restart: unless-stopped
-
-  bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr
-    network_mode: "service:gluetun"
+    # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-    volumes:
-      - bazarr:/config
-      - /mnt/plex/Movies:/movies
-      - /mnt/plex/Shows:/shows
-    restart: unless-stopped
 
   overseerr:
+    # Attributes
     image: sctx/overseerr:latest
     container_name: overseerr
+    restart: unless-stopped
+    # Network
+    ports:
+    - 5055:5055
+    # Resources
+    volumes:
+      - overseerr:/app/config
+    # Variables
     environment:
       - LOG_LEVEL=debug
       - TZ=America/New_York
-    volumes:
-      - overseerr:/app/config
-    ports:
-    - 5055:5055
-    restart: unless-stopped
 
   flaresolverr:
+    # Attributes
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    network_mode: "service:gluetun"
+    restart: unless-stopped
+    # Network
+    network_mode: service:gluetun
+    # Resources
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=America/New_York
-    restart: unless-stopped
 
 volumes:
   gluetun:
@@ -146,8 +163,6 @@ volumes:
   radarr:
     external: true
   lidarr:
-    external: true
-  bazarr:
     external: true
   prowlarr:
     external: true
