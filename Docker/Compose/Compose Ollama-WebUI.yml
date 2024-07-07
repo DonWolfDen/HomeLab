@@ -1,10 +1,10 @@
 services:
   ollama:
     # Attributes
-    image: ollama/ollama:latest
+    image: ollama/ollama
     container_name: ollama
-    pull_policy: always
     restart: unless-stopped
+    pull_policy: always
     # Resources
     volumes:
       - ollama:/root/.ollama
@@ -15,6 +15,10 @@ services:
             #- driver: nvidia
               count: all
               capabilities: [gpu]
+    # Variables
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - TZ=America/Detroit
     # Interaction
     tty: true
 
@@ -22,9 +26,10 @@ services:
     # Attributes
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
+    restart: unless-stopped
+    pull_policy: always
     depends_on:
       - ollama
-    restart: unless-stopped
     # Network
     ports:
       - 3030:8080
@@ -33,12 +38,13 @@ services:
       - open-webui:/app/backend/data
     # Variables
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - TZ=America/Detroit
     extra_hosts:
       - host.docker.internal:host-gateway
 
 volumes:
   ollama:
-    external: true
+    driver: local
   open-webui:
-    external: true
+    driver: local

@@ -1,17 +1,19 @@
 services:
   dashy:
     # Attributes
-    image: lissy93/dashy:latest
+    image: lissy93/dashy
     container_name: dashy
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
-      - '8888:8080'
+      - 8888:8080
     # Resources
     volumes:
-      - /home/$USER/dashy/dashy-conf.yml:/app/user-data/conf.yml
+      - /app/dashy/dashy-conf.yml:/app/user-data/conf.yml
     # Variables
-	  environment:
+    environment:
       - PUID=1000
       - PGID=1000
+      - TZ=America/Detroit
       - NODE_ENV=production

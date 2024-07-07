@@ -1,17 +1,17 @@
 services:
-  bazarr:
+  lidarr:
     # Attributes
-    image: lscr.io/linuxserver/bazarr
-    container_name: bazarr
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
     restart: unless-stopped
     pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
     volumes:
-      - bazarr:/config
-      - /mnt/plex/Movies:/movies
-      - /mnt/plex/Shows:/shows
+      - lidarr:/config
+      - /mnt/plex/Music:/music
+      - /mnt/plex/Downloads:/downloads
     # Variables
     environment:
       - PUID=1000
@@ -19,5 +19,5 @@ services:
       - TZ=America/Detroit
 
 volumes:
-  bazarr:
+  host-volume:
     driver: local

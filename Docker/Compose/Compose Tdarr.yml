@@ -1,7 +1,7 @@
 services:
   tdarr:
     # Attributes
-    image: ghcr.io/haveagitgat/tdarr:latest
+    image: ghcr.io/haveagitgat/tdarr
     container_name: tdarr
     restart: unless-stopped
     # Network
@@ -18,7 +18,7 @@ services:
       - /transcode_cache:/temp
     # Variables
     environment:
-      - TZ=America/New_York
+      - TZ=America/Detroit
       - PUID=1000
       - PGID=1000
       - UMASK_SET=002
@@ -29,11 +29,12 @@ services:
       - inContainer=true
       - ffmpegVersion=6
       - nodeName= ## docker host hostname
+      - TZ=America/Detroit
 
 volumes:
   tdarr_server:
-    external: true
+    driver: local
   tdarr_configs:
-    external: true
+    driver: local
   tdarr_logs:
-    external: true
+    driver: local

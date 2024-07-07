@@ -1,14 +1,22 @@
 services:
   portainer:
     # Attributes
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce
     container_name: portainer
     restart: always
+    pull_policy: always
     # Network
     ports:
-      - '8000:8000'
-      - '9443:9443'
+      - 8000:8000
+      - 9443:9443
     # Resources
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    # Variables
+    environment:
+      - TZ=America/Detroit
+
+volumes:
+  portainer_data:
+    driver: local
