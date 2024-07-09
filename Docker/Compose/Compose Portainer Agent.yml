@@ -4,10 +4,14 @@ services:
     image: portainer/agent:2.19.5
     container_name: portainer_agent
     restart: always
+    pull_policy: always
     # Network
     ports:
-      - '9001:9001'
+      - 9001:9001
     # Resources
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
+    environment:
+      - TZ=America/Detroit
+

@@ -1,8 +1,10 @@
 services:
   metabase:
     # Attributes
-    image: metabase/metabase:latest
+    image: metabase/metabase
     container_name: metabase
+    restart: unless-stopped
+    pull_policy: always
     # Network
     hostname: metabase
     networks:
@@ -14,12 +16,13 @@ services:
     - /dev/urandom:/dev/random:ro
     # Variables
     environment:
-      MB_DB_TYPE: postgres
-      MB_DB_DBNAME: metabaseappdb
-      MB_DB_PORT: 5432
-      MB_DB_USER: metabase
-      MB_DB_PASS: mysecretpassword
-      MB_DB_HOST: postgres
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=metabaseappdb
+      - MB_DB_PORT=5432
+      - MB_DB_USER=metabase
+      - MB_DB_PASS=mysecretpassword
+      - MB_DB_HOST=postgres
+      - TZ=America/Detroit
     # Interaction
     healthcheck:
       test: curl --fail -I http://localhost:3000/api/health || exit 1
@@ -29,8 +32,10 @@ services:
 
   postgres:
     # Attributes
-    image: postgres:latest
+    image: postgres
     container_name: postgres
+    restart: unless-stopped
+    pull_policy: always
     # Network
     hostname: postgres
     # Resources
@@ -38,10 +43,11 @@ services:
       - metanet1
     # Variables
     environment:
-      POSTGRES_USER: metabase
-      POSTGRES_DB: metabaseappdb
-      POSTGRES_PASSWORD: mysecretpassword
-
+      - POSTGRES_USER=metabase
+      - POSTGRES_DB=metabaseappdb
+      - POSTGRES_PASSWORD=mysecretpassword
+      - TZ=America/Detroit
+      
 networks:
   metanet1:
     driver: bridge

@@ -4,10 +4,12 @@ services:
     image: cloudflare/cloudflared
     container_name: cloudflared-tunnel
     restart: unless-stopped
+    pull_policy: always
     # Variables
     env_file:
       - stack.env
-#    environment:
+    environment:
+      - TZ=America/Detroit
 #      - TUNNEL_TOKEN= # mytokenfromcloudflare-com
     # Interaction
     command: tunnel run

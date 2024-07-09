@@ -1,7 +1,7 @@
 services:
   container:
     # Attributes
-    image: repo/application:latest
+    image: repo/application:version
     container_name: container-name
     restart: unless-stopped
     pull_policy: always
@@ -19,7 +19,7 @@ services:
       - other-container
     # Resources
     volumes:
-      - host-volume:/container-path
+      - external-volume:/container-path
       - /path/on/host:/path/in/container
     devices:
       - /dev/net/tun:/dev/net/tun
@@ -37,12 +37,15 @@ services:
     env_file:
       - stack.env
     environment:
-      BOOLEAN: true
-      VARIABLE: value
-      MULTILINE-VARIABLE: |-
-        /value one
-        /value two
-        /value three
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+      - VARIABLE=value
+      - BOOLEAN=true
+      - MULTILINE-VARIABLE: |-
+          /value one
+          /value two
+          /value three
     extra_hosts:
       - host.docker.internal:host-gateway
       - hostname:address
@@ -72,16 +75,16 @@ services:
 networks:
   other-network:
     driver: bridge
-  other-network:
+  other-network2:
     driver: bridge
 
 volumes:
   host-volume:
-    external: true
-  host-volume:
-    external: true
-  host-volume:
-    external: true
+    driver: local
+  host-volume2:
+    driver: local
+  host-volume3:
+    driver: local
 
     # Attributes
     # Network

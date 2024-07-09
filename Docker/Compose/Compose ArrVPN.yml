@@ -4,6 +4,7 @@ services:
     image: qmcgaw/gluetun
     container_name: gluetun
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
       - 6881:6881 # qbittorrent
@@ -27,7 +28,7 @@ services:
 #      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
 #      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
       - SERVER_COUNTRIES=United States
-      - TZ=America/New_York
+      - TZ=America/Detroit
       - UPDATER_PERIOD=24h
     cap_add:
       - NET_ADMIN
@@ -37,6 +38,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     restart: unless-stopped
+    pull_policy: always
     depends_on:
       - gluetun
     # Network
@@ -49,14 +51,15 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
+      - TZ=America/Detroit
       - WEBUI_PORT=8085
 
   prowlarr:
     # Attributes
-    image: lscr.io/linuxserver/prowlarr:latest
+    image: lscr.io/linuxserver/prowlarr
     container_name: prowlarr
     restart: unless-stopped
+    pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
@@ -66,13 +69,14 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
+      - TZ=America/Detroit
 
   sonarr:
     # Attributes
-    image: lscr.io/linuxserver/sonarr:latest
+    image: lscr.io/linuxserver/sonarr
     container_name: sonarr
     restart: unless-stopped
+    pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
@@ -84,13 +88,14 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
+      - TZ=America/Detroit
 
   radarr:
     # Attributes
-    image: lscr.io/linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr
     container_name: radarr
     restart: unless-stopped
+    pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
@@ -102,31 +107,14 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
-
-  lidarr:
-    # Attributes
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    restart: unless-stopped
-    # Network
-    network_mode: service:gluetun
-    # Resources
-    volumes:
-      - lidarr:/config
-      - /mnt/plex/Music:/music
-      - /mnt/plex/Downloads:/downloads
-    # Variables
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - TZ=America/Detroit
 
   overseerr:
     # Attributes
-    image: sctx/overseerr:latest
+    image: sctx/overseerr
     container_name: overseerr
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
     - 5055:5055
@@ -136,34 +124,35 @@ services:
     # Variables
     environment:
       - LOG_LEVEL=debug
-      - TZ=America/New_York
+      - TZ=America/Detroit
 
   flaresolverr:
     # Attributes
-    image: ghcr.io/flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr
     container_name: flaresolverr
     restart: unless-stopped
+    pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
     environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=America/New_York
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=America/Detroit
 
 volumes:
   gluetun:
-    external: true
+    driver: local
   qbittorrent:
-    external: true
+    driver: local
   sonarr:
-    external: true
+    driver: local
   radarr:
-    external: true
+    driver: local
   lidarr:
-    external: true
+    driver: local
   prowlarr:
-    external: true
+    driver: local
   overseerr:
-    external: true
+    driver: local
