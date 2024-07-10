@@ -21,7 +21,15 @@ You can change the default port with -L :
 ```sh
 sudo sh kasm_release/install.sh -L 8443
 ```
-
+## Start or stop containers
+```sh
+/opt/kasm/bin/start
+/opt/kasm/bin/stop
+```
+## Backup
+```sh
+sudo docker exec kasm_db pg_dump -U kasmapp -F t kasm > /tmp/backup.tar
+```
 ## Uninstall Kasm
 ```sh
 /opt/kasm/current/bin/stop
@@ -42,4 +50,17 @@ docker rmi $(sudo docker images --filter "label=com.kasmweb.image=true" -q)
 rm -rf /opt/kasm/
 deluser kasm_db
 deluser kasm
+```
+## Restore
+```sh
+# download the same version of kasm that is on the primary database server and unpack it
+cd /tmp
+curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz
+tar -xf kasm_release*.tar.gz
+# install
+sudo bash kasm_release/install.sh
+# copy the backup.tar into the kasm_db container
+sudo docker cp backup.tar kasm_db:/tmp/backup.tar
+# restore the database
+sudo docker exec kasm_db pg_restore -d kasm /tmp/backup.tar -c -U kasmapp
 ```
