@@ -3,6 +3,7 @@ services:
     # Attributes
     image: repo/application:version
     container_name: container-name
+    privileged: true
     restart: unless-stopped
     pull_policy: always
     depends_on:

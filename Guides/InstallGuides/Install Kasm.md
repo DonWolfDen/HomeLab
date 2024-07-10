@@ -13,9 +13,9 @@ cat /proc/swaps
 ```
 Download files/install script and run
 ```sh
-wget https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz &&
+curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz &&
 tar -xf kasm_release*.tar.gz &&
-sudo sh kasm_release/install.sh
+sudo bash kasm_release/install.sh
 ```
 You can change the default port with -L :
 ```sh
@@ -28,7 +28,7 @@ sudo sh kasm_release/install.sh -L 8443
 ```
 ## Backup
 ```sh
-sudo docker exec kasm_db pg_dump -U kasmapp -F t kasm > /tmp/backup.tar
+sudo bash /opt/kasm/1.15.0/bin/utils/db_backup -f /tmp/kasm_db_backup.tar -p /opt/kasm/1.15.0/
 ```
 ## Uninstall Kasm
 ```sh
@@ -59,8 +59,6 @@ curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.
 tar -xf kasm_release*.tar.gz
 # install
 sudo bash kasm_release/install.sh
-# copy the backup.tar into the kasm_db container
-sudo docker cp backup.tar kasm_db:/tmp/backup.tar
-# restore the database
-sudo docker exec kasm_db pg_restore -d kasm /tmp/backup.tar -c -U kasmapp
+# Execute the database restore command
+sudo /opt/kasm/1.15.0/bin/utils/db_restore -f /tmp/kasm_db_backup.tar -p  /opt/kasm/1.15.0
 ```
