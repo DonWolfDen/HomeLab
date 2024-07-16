@@ -19,5 +19,5 @@ services:
       - TZ=America/Detroit
 
 volumes:
-  host-volume:
+  lidarr:
     driver: local
