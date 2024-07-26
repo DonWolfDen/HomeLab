@@ -9,14 +9,14 @@ services:
     network_mode: host
     # Resources
     volumes:
-      - /etc/docker/searxng-docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /app/searxng-docker/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data:rw
       - caddy-config:/config:rw
     # Variables
     env_file:
       - stack.env
     environment:
-      - SEARXNG_HOSTNAME=http://127.0.0.1:8844
+      - SEARXNG_HOSTNAME=${SEARXNG_HOSTNAME:-http://127.0.0.1:8844}
       - SEARXNG_TLS=${LETSENCRYPT_EMAIL:-internal}
       - TZ=America/Detroit
     cap_drop:
@@ -61,7 +61,7 @@ services:
 
   searxng:
     # Attributes
-    image: docker.io/searxng/searxng
+    image: docker.io/searxng/searxng:latest
     container_name: searxng
     restart: unless-stopped
     pull_policy: always
@@ -69,10 +69,10 @@ services:
     networks:
       - searxng
     ports:
-      - 8844:8080
+      - "127.0.0.1:8844:8080"
     # Resources
     volumes:
-      - /etc/docker/searxng-docker/searxng:/etc/searxng:rw
+      - /app/searxng-docker/searxng:/etc/searxng:rw
     # Variables
     environment:
       - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-127.0.0.1}/
