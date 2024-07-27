@@ -37,8 +37,14 @@ Map the share in the container config file in the Proxmox shell
 # You can make this mount read only by adding ',ro=1' to the end
 mp0: /mnt/pve/$name,mp=/mnt/plex
 ```
+
+Make a cron job to mount -a on reboot of the proxmox host
+```sh
+@reboot root /bin/bash -c 'sleep 10 && /bin/mount -a'
+```
+
 ### Optional: Pass a GPU into the container
-Credit: 
+Credit:
 https://github.com/JamesTurland/JimsGarage/blob/main/LXC/Jellyfin/readme.md
 
 With this method, multiple containers can access the same GPU
