@@ -18,10 +18,10 @@ adduser $username sudo
 ```
 Set static IP and restart network service
 ```sh
-cp /etc/network/interfaces /etc/network/interfaces.bak
+cp /etc/network/interfaces /etc/network/interfaces.bak &&
 nano /etc/network/interfaces
 ```
-```
+```sh
 # The primary network interface
 allow-hotplug ens18
 iface ens18 inet static

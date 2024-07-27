@@ -14,7 +14,7 @@ services:
       - 8989:8989 # Sonarr
       - 7878:7878 # Radarr
       - 8686:8686 # Lidarr
-      - 6767:6767 # Bazarr
+#      - 6767:6767 # Bazarr
       - 8191:8191 # FlareSolverr
     # Resources
     volumes:
@@ -38,7 +38,7 @@ services:
 
   qbittorrent:
     # Attributes
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: lscr.io/linuxserver/qbittorrent:4.6.5-libtorrentv1
     container_name: qbittorrent
     restart: unless-stopped
     pull_policy: always
@@ -52,8 +52,8 @@ services:
       - /mnt/plex/Downloads:/downloads
     # Variables
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Detroit
       - WEBUI_PORT=8085
 
@@ -70,8 +70,8 @@ services:
       - prowlarr:/config
     # Variables
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Detroit
 
   sonarr:
@@ -89,8 +89,8 @@ services:
       - /mnt/plex/Downloads:/downloads
     # Variables
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Detroit
 
   radarr:
@@ -108,8 +108,27 @@ services:
       - /mnt/plex/Downloads:/downloads
     # Variables
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
+      - TZ=America/Detroit
+
+  lidarr:
+    # Attributes
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    restart: unless-stopped
+    pull_policy: always
+    # Network
+    network_mode: service:gluetun
+    # Resources
+    volumes:
+      - lidarr:/config
+      - /mnt/plex/Music:/music
+      - /mnt/plex/Downloads:/downloads
+    # Variables
+    environment:
+      - PUID=0
+      - PGID=0
       - TZ=America/Detroit
 
   lidarr:

@@ -19,7 +19,7 @@ sudo bash kasm_release/install.sh
 ```
 You can change the default port with -L :
 ```sh
-sudo sh kasm_release/install.sh -L 8443
+sudo bash kasm_release/install.sh -L 8443
 ```
 ## Start or stop containers
 ```sh

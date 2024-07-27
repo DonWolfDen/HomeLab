@@ -1,0 +1,18 @@
+services:
+  protonmail-bridge:
+    # Attributes
+    image: shenxn/protonmail-bridge
+    container_name: protonmail
+    restart: unless-stopped
+    pull_policy: always
+    # Network
+    ports:
+      - 1025:25/tcp
+      - 1143:143/tcp
+    # Resources
+    volumes:
+      - protonmail:/root
+
+volumes:
+  protonmail:
+    driver: local
