@@ -40,6 +40,8 @@ mp0: /mnt/pve/$name,mp=/mnt/plex
 
 Make a cron job to mount -a on reboot of the proxmox host
 ```sh
+crontab -e
+# Paste this at the bottom
 @reboot root /bin/bash -c 'sleep 10 && /bin/mount -a'
 ```
 
