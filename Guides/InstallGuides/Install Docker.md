@@ -11,3 +11,12 @@ Add user to Docker group so sudo isn't needed
 ```sh
 sudo usermod -aG docker $username
 ```
+
+Default volume location for Docker on Linux (requires root):
+```sh
+/var/lib/docker/volumes
+```
+Default volume location for Docker desktop on Windows:
+```sh
+\\wsl$\docker-desktop-data\data\docker\volumes
+```
