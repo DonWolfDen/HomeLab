@@ -72,6 +72,15 @@ df -h
 lxc-stop -n $ctid --kill
 ```
 
+## Fix containers not resolving DNS
+Edit nameserver swich config on Proxmox host
+```nano /etc/nsswitch.conf```
+Add DNS to hosts and networks lines:
+```sh
+hosts:          files dns
+networks:       files dns
+```
+
 ## Download container templates
 ```sh
 pveam update
