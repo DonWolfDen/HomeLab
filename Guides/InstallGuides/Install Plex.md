@@ -40,13 +40,9 @@ mp0: /mnt/pve/$name,mp=/mnt/plex
 
 Make a cron job to mount -a on reboot of the proxmox host
 ```sh
-<<<<<<< Updated upstream
 crontab -e
 # Paste this at the bottom
-@reboot root /usr/bin/bash -c 'sleep 10 && /usr/bin/mount -a'
-=======
 @reboot /bin/bash -c 'sleep 10 && /bin/mount -a'
->>>>>>> Stashed changes
 ```
 
 ### Optional: Pass a GPU into the container
