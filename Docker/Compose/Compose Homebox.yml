@@ -16,10 +16,9 @@ services:
       - HBOX_LOG_LEVEL=info
       - HBOX_LOG_FORMAT=text
       - HBOX_WEB_MAX_UPLOAD_SIZE=100
-      - HBOX_OPTIONS_ALLOW_REGISTRATION=false
-      - HBOX_TZ=America/Detroit
-      - ENV_TZ=America/Detroit
-
+      - HBOX_OPTIONS_ALLOW_REGISTRATION=true
+          # Make sure to disable registration
+      - TZ=America/Detroit
 volumes:
    homebox-data:
     driver: local

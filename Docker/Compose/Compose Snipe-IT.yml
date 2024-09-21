@@ -1,0 +1,35 @@
+services:
+  snipe-it:
+    image: lscr.io/linuxserver/snipe-it:latest
+    container_name: snipe-it
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+      - APP_KEY=
+      - APP_URL=http://localhost:8080
+      # Change this to the URL used if using a Cloudflare Tunnel
+      - MYSQL_PORT_3306_TCP_ADDR= #Local IP of MariaDB
+      - MYSQL_PORT_3306_TCP_PORT= #Port of the MariaDB
+      - MYSQL_DATABASE=
+      - MYSQL_USER=
+      - MYSQL_PASSWORD=
+      - APP_DEBUG=false #optional
+      - APP_ENV=production #optional
+      - APP_FORCE_TLS=false #optional
+      - APP_LOCALE= #optional
+      - MAIL_PORT_587_TCP_ADDR= #optional
+      - MAIL_PORT_587_TCP_PORT= #optional
+      - MAIL_ENV_FROM_ADDR= #optional
+      - MAIL_ENV_FROM_NAME= #optional
+      - MAIL_ENV_ENCRYPTION= #optional
+      - MAIL_ENV_USERNAME= #optional
+      - MAIL_ENV_PASSWORD= #optional
+    volumes:
+      - snipe-it-data:/data/
+    ports:
+      - 8080:80
+    restart: unless-stopped
+volumes:
+   snipe-it-data:
+    driver: local

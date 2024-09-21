@@ -1,8 +1,8 @@
 services:
-  uptime-kuma:
+  uptimekuma:
     # Attributes
     image: louislam/uptime-kuma
-    container_name: kuma
+    container_name: uptimekuma
     restart: always
     pull_policy: always
     # Network
@@ -10,11 +10,10 @@ services:
       - 3001:3001
     # Resources
     volumes:
-      - kuma:/app/data
+      - uptimekuma:/app/data/
     # Variables
     environment:
-      - TZ=America/Detroit
-
+    - TZ=America/Detroit
 volumes:
-  kuma:
+  uptimekuma:
     driver: local
