@@ -1,0 +1,59 @@
+# Paperless-NGX Portainer Stack
+
+
+```yaml
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: always
+    environment:
+      PAPERLESS_REDIS: redis://redis:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: paperlesspassword
+      PAPERLESS_DBNAME: paperless
+    ports:
+      - 8910:8000
+    volumes:
+      - /path/to/paperless/data:/usr/src/paperless/data
+      - /path/to/paperless/media:/usr/src/paperless/media
+      - /path/to/paperless/export:/usr/src/paperless/export
+      - /path/to/paperless/consume:/usr/src/paperless/consume
+
+  db:
+    image: postgres:13
+    container_name: paperless-db
+    restart: always
+    environment:
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperlesspassword
+      POSTGRES_DB: paperless
+    volumes:
+      - /path/to/postgres/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: paperless-redis
+    restart: always
+    volumes:
+      - /path/to/redis/data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+### Step-by-Step to Create the Admin User:
+
+1. **Run the following command inside the Paperless-NGX container**:
+```bash
+docker exec -it paperless python3 manage.py createsuperuser
+```
+
+2. **You’ll be prompted to input**:
+- **Username**
+- **Email**
+- **Password**
+
+3. **Once completed, you can log in to the Paperless-NGX web interface using the credentials you just created.**
