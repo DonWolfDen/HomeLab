@@ -3,7 +3,7 @@ services:
     # Attributes
     image: qmcgaw/gluetun
     container_name: gluetun
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:
@@ -14,7 +14,6 @@ services:
       - 8989:8989 # Sonarr
       - 7878:7878 # Radarr
       - 8686:8686 # Lidarr
-#      - 6767:6767 # Bazarr
       - 8191:8191 # FlareSolverr
     # Resources
     volumes:
@@ -27,8 +26,8 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
 #      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2 
-      - VPN_PORT_FORWARDING=on # add +pmp to the end of openVPN user if this is on
+#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
+#      - VPN_PORT_FORWARDING=on
       - SERVER_COUNTRIES=United States
 #      - SERVER_HOSTNAMES=node-us-129.protonvpn.net
       - TZ=America/Detroit
@@ -40,7 +39,7 @@ services:
     # Attributes
     image: lscr.io/linuxserver/qbittorrent:4.6.5-libtorrentv1
     container_name: qbittorrent
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     depends_on:
       - gluetun
@@ -61,7 +60,7 @@ services:
     # Attributes
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     network_mode: service:gluetun
@@ -78,15 +77,15 @@ services:
     # Attributes
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
     volumes:
       - sonarr:/config
-      - /mnt/plex/Shows:/shows
       - /mnt/plex/Downloads:/downloads
+      - /mnt/plex:/plex
     # Variables
     environment:
       - PUID=0
@@ -97,15 +96,15 @@ services:
     # Attributes
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
     volumes:
       - radarr:/config
-      - /mnt/plex/Movies:/movies
       - /mnt/plex/Downloads:/downloads
+      - /mnt/plex:/plex
     # Variables
     environment:
       - PUID=0
@@ -116,45 +115,26 @@ services:
     # Attributes
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     network_mode: service:gluetun
     # Resources
     volumes:
       - lidarr:/config
-      - /mnt/plex/Music:/music
       - /mnt/plex/Downloads:/downloads
+      - /mnt/plex:/plex
     # Variables
     environment:
       - PUID=0
       - PGID=0
-      - TZ=America/Detroit
-
-  lidarr:
-    # Attributes
-    image: lscr.io/linuxserver/lidarr
-    container_name: lidarr
-    restart: unless-stopped
-    pull_policy: always
-    # Network
-    network_mode: service:gluetun
-    # Resources
-    volumes:
-      - lidarr:/config
-      - /mnt/plex/Music:/music
-      - /mnt/plex/Downloads:/downloads
-    # Variables
-    environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=America/Detroit
 
   overseerr:
     # Attributes
     image: sctx/overseerr:latest
     container_name: overseerr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:
@@ -171,7 +151,7 @@ services:
     # Attributes
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     network_mode: service:gluetun
