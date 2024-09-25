@@ -1,45 +1,46 @@
-version: '3'
-
 services:
-
   mariadb-vikunja:
+    # Attributes
     image: mariadb:10
     container_name: mariadb-vikunja
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+    pull_policy: always
+    # Resources
+    volumes:
+      - mariadb-vikunja:/var/lib/mysql
+    # Variables
     environment:
       MYSQL_ROOT_PASSWORD: changeme
       MYSQL_USER: vikunja-db-user
       MYSQL_PASSWORD: dbpass
       MYSQL_DATABASE: vikunja-db
-    volumes:
-      - ./mariadb-vikunja:/var/lib/mariadb-vikunja
-    restart: unless-stopped
-    networks:
-    - vikunja
-    
+    # Interaction
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
   vikunja:
+    # Attributes
     image: vikunja/vikunja
     container_name: vikunja
+    restart: unless-stopped
+    pull_policy: always
+    depends_on:
+      - mariadb-vikunja
+    # Network
+    ports:
+      - 3456:3456
+    # Resources
+    volumes:
+      - vikunja:/app/vikunja/files
+    # Variables
     environment:
-      VIKUNJA_SERVICE_PUBLICURL: IP${###}:PORT
       VIKUNJA_DATABASE_HOST: mariadb-vikunja
       VIKUNJA_DATABASE_PASSWORD: dbpass
       VIKUNJA_DATABASE_TYPE: mysql
       VIKUNJA_DATABASE_USER: vikunja-db-user
       VIKUNJA_DATABASE_DATABASE: vikunja-db
-    ports:
-      - 3456:3456
-    volumes:
-      - ./files:/app/vikunja/files
-    depends_on:
-      - mariadb-vikunja
-    restart: unless-stopped
-    networks:
-    - vikunja
 
 volumes:
-  vikunja-files:
+  vikunja:
+    driver: local
   mariadb-vikunja:
-
-networks:
- vikunja:
+    driver: local
