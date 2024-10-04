@@ -1,7 +1,7 @@
 services:
   ollama:
     # Attributes
-    image: ollama/ollama
+    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
     container_name: ollama
     restart: unless-stopped
     pull_policy: always
@@ -24,7 +24,7 @@ services:
 
   open-webui:
     # Attributes
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
     container_name: open-webui
     restart: unless-stopped
     pull_policy: always

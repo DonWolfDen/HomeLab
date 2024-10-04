@@ -33,6 +33,7 @@ services:
       - vikunja:/app/vikunja/files
     # Variables
     environment:
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: false
       VIKUNJA_DATABASE_HOST: mariadb-vikunja
       VIKUNJA_DATABASE_PASSWORD: dbpass
       VIKUNJA_DATABASE_TYPE: mysql

@@ -1,7 +1,7 @@
 services:
   plex:
     # Attributes
-    image: lscr.io/linuxserver/plex
+    image: lscr.io/linuxserver/plex:latest
     container_name: plex
     restart: unless-stopped
     pull_policy: always
