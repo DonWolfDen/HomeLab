@@ -5,7 +5,9 @@ time="$(date +%m-%d-%Y-%H-%M)"
 ## Set the source file path
 source="/"
 ## Set the destination file path
-destination="/mnt/Server/Backup"
+destination="/mnt/backups/$HOSTNAME"
+mkdir -p "$destination"
+
 ## Get the script name and host name as a string
 filename="$(basename $0)-$HOSTNAME"
 
@@ -22,4 +24,5 @@ tar -cvpzf "$destination/$filename-$time.tar.gz" \
 --exclude=/var/cache \
 --exclude=/var/tmp \
 --exclude=/var/log \
-$source
+--exclude=/mnt \
+"$source"

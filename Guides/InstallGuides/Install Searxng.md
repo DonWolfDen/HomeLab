@@ -7,12 +7,13 @@ https://github.com/searxng
 
 Pull files from git
 ```sh
-cd /etc/docker/
+mkdir -p /app &&
+cd /app &&
 sudo git clone https://github.com/searxng/searxng-docker.git
 ```
 Change default secret
 ```sh
-cd /etc/docker/searxng-docker
+cd /app/searxng-docker
 sudo sed -i "s|ultrasecretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
 ```
 Fix html method so back button works

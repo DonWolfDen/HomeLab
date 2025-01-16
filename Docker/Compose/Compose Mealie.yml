@@ -1,19 +1,16 @@
 services:
   mealie:
     # Attributes
-    image: ghcr.io/mealie-recipes/mealie:latest
+    image: ghcr.io/mealie-recipes/mealie
     container_name: mealie
     restart: always
+    pull_policy: always
     # Network
     ports:
-        - "9925:9000"
+      - 9925:9000
     # Resources
     volumes:
-      - mealie-data:/app/data/
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 2000M
+      - mealie:/app/data/
     # Variables
     environment:
       - ALLOW_SIGNUP=true
@@ -23,7 +20,6 @@ services:
       - MAX_WORKERS=1
       - WEB_CONCURRENCY=1
       - BASE_URL= # IP address of host
-
 volumes:
-  mealie-data:
+  mealie:
     driver: local

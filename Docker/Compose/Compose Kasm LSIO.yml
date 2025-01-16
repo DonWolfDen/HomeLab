@@ -1,0 +1,18 @@
+services:
+  kasm:
+    # Attributes
+    image: lscr.io/linuxserver/kasm:latest
+    container_name: kasm
+    privileged: true
+    restart: unless-stopped
+    # Network
+    ports:
+      - 3000:3000
+      - 443:443
+    # Resources
+    volumes:
+      - kasm_opt:/opt
+      - kasm_profiles:/profiles #optional
+    # Variables
+    environment:
+      - KASM_PORT=443

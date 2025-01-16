@@ -4,9 +4,10 @@ services:
     image: itzg/minecraft-server
     container_name: mc-pub
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
-      - '25565:25565'
+      - 25565:25565
     # Resources
     volumes:
       - mc-pub:/data
@@ -27,20 +28,23 @@ services:
     image: itzg/minecraft-server:java8-multiarch
     container_name: mc-pmon
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
-      - '25564:25565'
+      - 25564:25565
     # Resources
     volumes:
       - mc-pmon:/data
     # Variables
+    env_file:
+      - stack.env
     environment:
       SERVER_NAME: "Minecraft Pixelmon"
       EULA: true
       SNOOPER_ENABLED: false
       ALLOW_CHEATS: true
       MOD_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
+#      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
       CF_SLUG: the-pixelmon-modpack
       CF_FILENAME_MATCHER: "9.1.11"
       MEMORY: 4G
@@ -55,9 +59,10 @@ services:
     image: itzg/minecraft-server
     container_name: mc-priv
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
-      - '25563:25565'
+      - 25563:25565
     # Resources
     volumes:
       - mc-priv:/data
@@ -81,8 +86,8 @@ services:
 
 volumes:
   mc-pub:
-    external: true
+    driver: local
   mc-priv:
-    external: true
+    driver: local
   mc-pmon:
-    external: true
+    driver: local

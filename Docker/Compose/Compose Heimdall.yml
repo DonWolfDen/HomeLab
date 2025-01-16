@@ -4,10 +4,11 @@ services:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
     restart: unless-stopped
+    pull_policy: always
     # Network
     ports:
-      - '8088:80'
-      - '4433:443'
+      - 8088:80
+      - 4433:443
     # Resources
     volumes:
       - heimdall:/config
@@ -15,8 +16,8 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
+      - TZ=America/Detroit
 
 volumes:
   heimdall:
-    external: true
+    driver: local

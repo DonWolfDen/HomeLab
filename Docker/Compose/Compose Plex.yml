@@ -4,6 +4,7 @@ services:
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
     restart: unless-stopped
+    pull_policy: always
     # Network
     network_mode: host
     # Resources
@@ -16,12 +17,12 @@ services:
     environment:
       - PUID=0
       - PGID=0
-      - TZ=America/New_York
+      - TZ=America/Detroit
       - VERSION=docker
 #      - PLEX_CLAIM= ## get a claim code from https://www.plex.tv/claim/
     group_add:
-      - '107'
+      - 107
 
 volumes:
   plex:
-    external: true
+    driver: local

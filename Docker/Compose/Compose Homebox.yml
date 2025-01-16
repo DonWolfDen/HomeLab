@@ -1,10 +1,10 @@
 services:
   homebox:
     # Attributes
-    image: ghcr.io/hay-kot/homebox:latest
-#   image: ghcr.io/hay-kot/homebox:latest-rootless
+    image: ghcr.io/hay-kot/homebox # latest-rootless (optional)
     container_name: homebox
     restart: always
+    pull_policy: always
     # Network
     ports:
       - 3100:7745
@@ -13,14 +13,12 @@ services:
       - homebox-data:/data/
     # Variables
     environment:
-    - HBOX_LOG_LEVEL=info
-    - HBOX_LOG_FORMAT=text
-    - HBOX_WEB_MAX_UPLOAD_SIZE=100
-    - HBOX_OPTIONS_ALLOW_REGISTRATION=false
-    - HBOX_TZ=America/Detroit
-    - ENV TZ="America/Detroit"
-    - ENV TZ=America/Detroit
-
+      - HBOX_LOG_LEVEL=info
+      - HBOX_LOG_FORMAT=text
+      - HBOX_WEB_MAX_UPLOAD_SIZE=100
+      - HBOX_OPTIONS_ALLOW_REGISTRATION=true
+          # Make sure to disable registration
+      - TZ=America/Detroit
 volumes:
    homebox-data:
-     driver: local
+    driver: local
