@@ -1,0 +1,61 @@
+services:
+  itflow:
+    # Attributes
+    image: itfloworg/itflow:latest
+    container_name: itflow
+    platform: linux/amd64
+    restart: unless-stopped
+    depends_on: 
+      - itflow-db
+    # Network
+    hostname: itflow
+    networks:
+      - wan
+      - itflow-db
+    ports:
+      - 80:8080
+    # Resources
+    volumes:
+      - itflow:/var/www/localhost/htdocs
+    # Variables
+    environment:
+      - TZ=America/Detroit
+      - ITFLOW_NAME=ITFlow
+      - ITFLOW_URL=it.$ROOT_DOMAIN
+      - ITFLOW_PORT=8080
+      - ITFLOW_REPO=github.com/itflow-org/itflow
+      - ITFLOW_REPO_BRANCH=master
+      - ITFLOW_LOG_LEVEL=info
+      - ITFLOW_DB_HOST=itflow-db
+      - ITFLOW_DB_PASS=$ITFLOW_DB_PASS
+
+  itflow-db:
+    # Attributes
+    image: mariadb:10.11.6
+    container_name: itflow-db    
+    restart: always
+    # Network
+    hostname: itflow-db
+    networks:
+      - itflow-db
+    # Resources
+    volumes:
+      - itflow-db:/var/lib/mysql/
+    # Variables
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+      - MARIADB_DATABASE=itflow
+      - MARIADB_USER=itflow
+      - MARIADB_PASSWORD=$ITFLOW_DB_PASS
+
+networks:
+  wan:
+    name: wan
+    driver: bridge
+  itflow-db:
+    name: itflow-db
+    external: false
+
+volumes:
+  itflow-db:
+    driver: local
