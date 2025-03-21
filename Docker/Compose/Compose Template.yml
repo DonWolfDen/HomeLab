@@ -1,67 +1,94 @@
 services:
-  itflow:
+  container:
     # Attributes
-    image: itfloworg/itflow:latest
-    container_name: itflow
-    platform: linux/amd64
+    image: repo/application:version
+    container_name: container-name
+    privileged: true
     restart: unless-stopped
-    depends_on: 
-      - itflow-db
+    pull_policy: always
+    depends_on:
+      - other-container
     # Network
-    hostname: itflow
+    hostname: hostname
+    network_mode: mode:value
     networks:
-      - wan
-      - itflow-db
+      - other-network
     ports:
-      - 80:8080
+      - 0000:0000
+      - host-port:container-port
+    links:
+      - other-container
     # Resources
     volumes:
-      - itflow:/var/www/localhost/htdocs
+      - external-volume:/container-path
+      - /path/on/host:/path/in/container
+    devices:
+      - /dev/net/tun:/dev/net/tun
+      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+              driver: nvidia
+              count: all
+              capabilities: [gpu]
+        limits:
+          memory: 2000M
     # Variables
     env_file:
       - stack.env
     environment:
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
-      - ITFLOW_NAME=ITFlow
-      - ITFLOW_URL=it.$ROOT_DOMAIN
-      - ITFLOW_PORT=8080
-      - ITFLOW_REPO=github.com/itflow-org/itflow
-      - ITFLOW_REPO_BRANCH=master
-      - ITFLOW_LOG_LEVEL=info
-      - ITFLOW_DB_HOST=itflow-db
-      - ITFLOW_DB_PASS=$ITFLOW_DB_PASS
+      - VARIABLE=value
+      - BOOLEAN=true
+      - MULTILINE-VARIABLE: |-
+          /value one
+          /value two
+          /value three
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      - hostname:address
+    group_add:
+      - 1000
+      - group
+    cap_add:
+      - CAPABILITY
+    cap_drop:
+      - CAPABILITY
+    # Interaction
+    command: 'command -to overwrite dockerfile'
+    tty: true
+    stdin_open: true
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 1
+    healthcheck:
+      test: curl --fail -I http://localhost:0000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
-  itflow-db:
-    # Attributes
-    image: mariadb:10.11.6
-    container_name: itflow-db    
-    restart: always
-    # Network
-    hostname: itflow-db
-    networks:
-      - itflow-db
-    # Resources
-    volumes:
-      - itflow-db:/var/lib/mysql/
-    # Variables
-    env_file:
-      - stack.env
-    environment:
-      - MARIADB_RANDOM_ROOT_PASSWORD=true
-      - MARIADB_DATABASE=itflow
-      - MARIADB_USER=itflow
-      - MARIADB_PASSWORD=$ITFLOW_DB_PASS
 
 networks:
-  wan:
-    name: wan
+  other-network:
     driver: bridge
-  itflow-db:
-    name: itflow-db
-    external: false
+  other-network2:
+    driver: bridge
 
 volumes:
-  itflow:
-    driver: local  
-  itflow-db:
+  host-volume:
     driver: local
+  host-volume2:
+    driver: local
+  host-volume3:
+    driver: local
+
+    # Attributes
+    # Network
+    # Resources
+    # Variables
+    # Interaction
