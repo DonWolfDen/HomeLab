@@ -18,6 +18,8 @@ services:
     volumes:
       - itflow:/var/www/localhost/htdocs
     # Variables
+    env_file:
+      - stack.env
     environment:
       - TZ=America/Detroit
       - ITFLOW_NAME=ITFlow
@@ -28,6 +30,7 @@ services:
       - ITFLOW_LOG_LEVEL=info
       - ITFLOW_DB_HOST=itflow-db
       - ITFLOW_DB_PASS=$ITFLOW_DB_PASS
+
 
   itflow-db:
     # Attributes
@@ -42,6 +45,8 @@ services:
     volumes:
       - itflow-db:/var/lib/mysql/
     # Variables
+    env_file:
+      - stack.env
     environment:
       - MARIADB_RANDOM_ROOT_PASSWORD=true
       - MARIADB_DATABASE=itflow
@@ -57,5 +62,7 @@ networks:
     external: false
 
 volumes:
+  itflow:
+    driver: local  
   itflow-db:
     driver: local
