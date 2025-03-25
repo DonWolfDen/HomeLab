@@ -9,6 +9,11 @@ net localgroup Administrators AdminLocal /add
 ```bat
 net user <username> /active:no
 ```
+## Set account password to not expire
+```
+WMIC USERACCOUNT WHERE Name='AdminLocal' SET PasswordExpires=FALSE
+net user AdminLocal | findstr /C:expires
+```
 ## Add Print Management Console
 ```bat
 Dism /Online /Add-Capability /CapabilityName:Print.Management.Console~~~~0.0.1.0
@@ -68,6 +73,30 @@ wmic diskdrive get Name,Model,SerialNumber,Size,Status,BusType /format:list
 ## Get battery report
 ```bat
 powercfg /batteryreport
+```
+## Reset Windows Update Components
+```
+net stop bits  
+net stop wuauserv  
+net stop appidsvc  
+net stop cryptsvc
+Ren %systemroot%\SoftwareDistribution SoftwareDistribution.old
+Ren %systemroot%\System32\catroot2 catroot2.old
+net start bits  
+net start wuauserv  
+net start appidsvc  
+net start cryptsvc
+```
+## Clean and reformat disk
+```
+diskpart
+list disk
+select disk #
+clean
+create partition primary
+select partition 1
+format FS=NTFS label="MyDrive" quick
+assign letter k
 ```
 
 # Registry Edits
