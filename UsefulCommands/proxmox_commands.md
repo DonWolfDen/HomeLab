@@ -32,8 +32,13 @@ rm -r /etc/pve/nodes/<nodename>
 ssh root@hostname
 systemctl restart pvestatd
 ```
+Make a cron job to mount -a on reboot of the proxmox host
+```
+crontab -e
+# Paste this at the bottom
+@reboot /bin/bash -c 'sleep 30 && /bin/mount -a'
+```
 
-## Resize LXC boot disk
 Increase
 ```sh
 pct resize $ctid rootfs 64G
