@@ -27,6 +27,12 @@ pvecm delnode <nodename>
 rm -r /etc/pve/nodes/<nodename>
 ```
 
+## Fix host key verification failure on clustered node
+Run on each other host in the cluster
+```sh
+/usr/bin/ssh -e none -o 'HostKeyAlias=NODEHOSTNAME' root@IPADDRESS /bin/true
+```
+
 ## Fix greyed out node and no shell
 ```sh
 ssh root@hostname
