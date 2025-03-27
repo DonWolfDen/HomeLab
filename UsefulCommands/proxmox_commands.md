@@ -1,16 +1,16 @@
 # Useful commands for Proxmox Linux Shell
 
 ## Proxmox Helper Scripts
-https://tteck.github.io/Proxmox/#proxmox-ve-tools
+https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install
 ```sh
 # Post Install Repositories and Subscription Nag
-bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/misc/post-pve-install.sh)"
+bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/post-pve-install.sh)"
 # LXC Updater Every Sunday at Midnight
-bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/misc/cron-update-lxcs.sh)"
+bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/update-lxcs.sh)"
 # Processor Microcode Firmware Update
-bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/misc/microcode.sh)"
+bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/microcode.sh)"
 # Host Backup
-bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/misc/host-backup.sh)"
+bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/host-backup.sh)"
 ```
 
 ## Disk passthrough
