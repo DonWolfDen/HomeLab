@@ -1,0 +1,20 @@
+services:
+  vaultwarden:
+    # Attributes
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    # Network
+    ports:
+      - 11111:80
+    # Resources
+    volumes:
+      - vw-data:/data # the path before the : can be changed
+    # Variables
+    environment:
+      # DOMAIN: "https://vault.example.com"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
+      SIGNUPS_ALLOWED: "true" # Deactivate this with "false" after you have created your account so that no strangers can register
+
+volumes:
+  vw-data:
+    driver: local
