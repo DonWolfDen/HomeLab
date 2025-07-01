@@ -10,21 +10,21 @@ services:
     # Resources
     volumes:
       - /path/to/wireguard/config:/config
-      - /lib/modules:/lib/modules #optional
+      - /lib/modules:/lib/modules #optional, needed if wireguard kernel module isnt already loaded on host
     # Variables
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/Detroit
-      - SERVERURL=wireguard.domain.com #optional
-      - SERVERPORT=51820 #optional
-      - PEERS=2 #optional
-      - PEERDNS=auto #optional
-      - INTERNAL_SUBNET=10.13.13.0 #optional
-      - ALLOWEDIPS=0.0.0.0/0 #optional
-      - PERSISTENTKEEPALIVE_PEERS= #optional
-      - LOG_CONFS=true #optional
+      - SERVERURL=wireguard.domain.com #optional, comment out to just use external IP
+      - SERVERPORT=51820 #optional, needs port forwarded on router
+      - PEERS=2 #optional, number of peer configs to be generated, can be a list of named configs
+      - PEERDNS=auto #optional, set this to internal pi-hole for ad blocking abroad
+      - INTERNAL_SUBNET=10.13.13.0 #optional, cannot conflict with server's subnet
+      - ALLOWEDIPS=0.0.0.0/0 #optional, can be used for split tunneling
+      - PERSISTENTKEEPALIVE_PEERS= #optional, useful for domains on dynamic DNS
+      - LOG_CONFS=true #optional, logs QR codes to docker logs
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE #optional
+      - SYS_MODULE #optional, needed if wireguard kernel module isnt already loaded on host
 
