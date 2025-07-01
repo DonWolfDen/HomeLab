@@ -57,6 +57,8 @@ services:
       - CAPABILITY
     cap_drop:
       - CAPABILITY
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
     # Interaction
     command: 'command -to overwrite dockerfile'
     tty: true

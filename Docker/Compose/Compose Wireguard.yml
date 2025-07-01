@@ -1,0 +1,30 @@
+services:
+  wireguard:
+    # Attributes
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    restart: unless-stopped
+    # Network
+    ports:
+      - 51820:51820/udp
+    # Resources
+    volumes:
+      - /path/to/wireguard/config:/config
+      - /lib/modules:/lib/modules #optional
+    # Variables
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+      - SERVERURL=wireguard.domain.com #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=2 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - PERSISTENTKEEPALIVE_PEERS= #optional
+      - LOG_CONFS=true #optional
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+
