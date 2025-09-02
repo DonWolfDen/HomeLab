@@ -1,3 +1,5 @@
+# The linuxserver.io group has decided to depricate this docker image. There will no longer be any updates to this.
+
 services:
   snipe-it:
     # Attributes
