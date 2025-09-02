@@ -1,35 +1,35 @@
 services:
   lubelogger:
     image: ghcr.io/hargata/lubelogger # Replace with the correct image tag or version
-    container_name: lubelogger_container
+    container_name: lubelogger
     ports:
       - "8911:8080" # Adjust the ports based on the application setup
     environment:
       - DB_HOST=db
       - DB_PORT=3307
-      - DB_USER=lubeloger_user
-      - DB_PASSWORD=secret_password
+      - DB_USER=lubeloger_user # Change me
+      - DB_PASSWORD=secret_password # Change me
       - DB_NAME=lubeloger_db
     volumes:
-      - ./data:/var/lib/lubeloger # Adjust the volume path based on your needs
+      - lube_logger:/data # Adjust the volume path based on your needs
     depends_on:
       - db
 
   db:
     image: mysql:5.7
-    container_name: mysql_lubelogger
+    container_name: lubelogger_db
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: root_password # Change me
       MYSQL_DATABASE: lubeloger_db
-      MYSQL_USER: lubeloger_user
-      MYSQL_PASSWORD: secret_password
+      MYSQL_USER: lubeloger_user # Change me
+      MYSQL_PASSWORD: secret_password # Change me
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - lube_mysql_data:/data
     ports:
       - "3307:3306"
 
 volumes:
-  mysql_data:
+  lube_mysql_data:
     driver: local
-  data:
+  lube_logger:
     driver: local
