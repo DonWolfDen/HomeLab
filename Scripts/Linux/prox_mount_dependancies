@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+qm start 1216
+
+until [ "$(qm status 1216 | awk '{print $2}')" == "running" ];
+do
+sleep 2
+done
+
+sleep 90
+
+mount -a
+
+sleep 5
+
+lxc-start -n 1141
+lxc-start -n 1142
+
+
+#######################
+
+#crontab -e:
+
+#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+#@reboot /usr/bin/bash /opt/scripts/mount.sh
+
