@@ -9,7 +9,7 @@ net localgroup Administrators AdminLocal /add
 ```bat
 net user <username> /active:no
 ```
-### Check if user password is valid
+## Check if user password is valid
 ```bat
 net use \\%COMPUTERNAME% /user:USERNAME PASSWORD
 net use \\%COMPUTERNAME% /delete
@@ -47,7 +47,7 @@ sfc /scannow
 DISM.exe /Online /Cleanup-Image /StartComponentCleanup
 DISM.exe /Online /Cleanup-Image /RestoreHealth
 ```
-### Chain system scans and restart
+## Chain system scans and restart
 ```bat
 sfc /scannow && DISM.exe /Online /Cleanup-Image /StartComponentCleanup && DISM.exe /Online /Cleanup-Image /RestoreHealth && shutdown /f /r /t 0
 ```
