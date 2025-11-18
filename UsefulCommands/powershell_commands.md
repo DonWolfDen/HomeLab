@@ -7,6 +7,10 @@ irm https://get.activated.win | iex
 # https://MassGrave.dev
 # https://github.com/massgravel/Microsoft-Activation-Scripts
 ```
+## Set all local user accounts to never expire password
+```pwsh
+Get-LocalUser | Set-LocalUser -PasswordNeverExpires $true
+```
 ## Get Drive Space
 ```pwsh
 get-volume
