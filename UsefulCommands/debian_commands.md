@@ -39,3 +39,8 @@ find . -type f \( -iname "*.log" -o -iname "desktop.ini" -o -iname "thumbs.db" -
 ```sh
 find . -type f ! \( -iname "*.mp3" -o -iname "*.ogg" -o -iname "song.ini" -o -iname "*.wma" -o -iname "*.m4a" -o -iname "*.flac" -o -iname "*.wav" \) -exec rm -v {} \;
 ```
+## Upgrade from Debian 12 to 13
+```sh
+sed -i 's/bookworm/trixie/g' /etc/apt/sources.list && apt update && apt dist-upgrade -y
+apt modernize-sources -y && apt update && apt upgrade -y && rm /var/mail/$USER & hostnamectl
+```
