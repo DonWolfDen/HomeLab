@@ -1,6 +1,6 @@
 # *A fully featured, Docker based platform to stream desktops and apps to web browser*
 https://github.com/kasmtech
-## Install Debian
+## Install Debian (Or Debian LXC container)
 ## Install Kasm
 Set up swap partition
 ```sh
@@ -13,7 +13,8 @@ cat /proc/swaps
 ```
 Download files/install script and run
 ```sh
-curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz &&
+cd /tmp &&
+curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.18.1.tar.gz &&
 tar -xf kasm_release*.tar.gz &&
 sudo bash kasm_release/install.sh
 ```
@@ -28,7 +29,7 @@ sudo bash kasm_release/install.sh -L 8443
 ```
 ## Backup
 ```sh
-sudo bash /opt/kasm/1.15.0/bin/utils/db_backup -f /tmp/kasm_db_backup.tar -p /opt/kasm/1.15.0/
+sudo bash /opt/kasm/1.18.1/bin/utils/db_backup -f /tmp/kasm_db_backup.tar -p /opt/kasm/1.18.1/
 ```
 ## Uninstall Kasm
 ```sh
@@ -38,14 +39,14 @@ export KASM_UID=$(id kasm -u)
 export KASM_GID=$(id kasm -g)
 -E docker compose -f /opt/kasm/current/docker/docker-compose.yaml rm
 docker network rm kasm_default_network
-docker volume rm kasm_db_1.15.0
+docker volume rm kasm_db_1.18.1
 docker rmi redis:5-alpine
 docker rmi postgres:9.5-alpine
 docker rmi kasmweb/nginx:latest
-docker rmi kasmweb/share:1.15.0
-docker rmi kasmweb/agent:1.15.0
-docker rmi kasmweb/manager:1.15.0
-docker rmi kasmweb/api:1.15.0
+docker rmi kasmweb/share:1.18.1
+docker rmi kasmweb/agent:1.18.1
+docker rmi kasmweb/manager:1.18.1
+docker rmi kasmweb/api:1.18.1
 docker rmi $(sudo docker images --filter "label=com.kasmweb.image=true" -q)
 rm -rf /opt/kasm/
 deluser kasm_db
@@ -55,10 +56,10 @@ deluser kasm
 ```sh
 # download the same version of kasm that is on the primary database server and unpack it
 cd /tmp
-curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz
+curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.18.1.tar.gz
 tar -xf kasm_release*.tar.gz
 # install
 sudo bash kasm_release/install.sh
 # Execute the database restore command
-sudo /opt/kasm/1.15.0/bin/utils/db_restore -f /tmp/kasm_db_backup.tar -p  /opt/kasm/1.15.0
+sudo /opt/kasm/1.18.1/bin/utils/db_restore -f /tmp/kasm_db_backup.tar -p  /opt/kasm/1.18.1
 ```
