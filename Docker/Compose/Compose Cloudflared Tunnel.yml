@@ -3,7 +3,7 @@ services:
     # Attributes
     image: cloudflare/cloudflared
     container_name: cloudflared-tunnel
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Variables
     env_file:

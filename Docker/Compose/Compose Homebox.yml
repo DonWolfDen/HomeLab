@@ -19,6 +19,7 @@ services:
       - HBOX_OPTIONS_ALLOW_REGISTRATION=true
           # Make sure to disable registration
       - TZ=America/Detroit
+
 volumes:
-   homebox-data:
+  homebox-data:
     driver: local

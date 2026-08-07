@@ -1,13 +1,16 @@
-version: '3'
 services:
   homarr:
+    # Attributes
     container_name: homarr
     image: ghcr.io/ajnart/homarr:latest
-    restart: unless-stopped
+    restart: always
+    pull_policy: always
+    # Network
+    ports:
+      - 7575:7575
+    # Resources
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
       - ./homarr/configs:/app/data/configs
       - ./homarr/icons:/app/public/icons
       - ./homarr/data:/data
-    ports:
-      - 7575:7575

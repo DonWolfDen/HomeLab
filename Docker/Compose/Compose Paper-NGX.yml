@@ -1,7 +1,3 @@
-# Paperless-NGX Portainer Stack
-
-
-```yaml
 services:
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
@@ -50,14 +46,10 @@ volumes:
 
 ### Step-by-Step to Create the Admin User:
 
-1. **Run the following command inside the Paperless-NGX container**:
-```bash
-docker exec -it paperless python3 manage.py createsuperuser
-```
-
-2. **You’ll be prompted to input**:
-- **Username**
-- **Email**
-- **Password**
-
-3. **Once completed, you can log in to the Paperless-NGX web interface using the credentials you just created.**
+#1. **Run the following command inside the Paperless-NGX container**:
+# docker exec -it paperless python3 manage.py createsuperuser
+#2. **You’ll be prompted to input**:
+#- **Username**
+#- **Email**
+#- **Password**
+#3. **Once completed, you can log in to the Paperless-NGX web interface using the credentials you just created.**

@@ -4,15 +4,24 @@ services:
     image: lscr.io/linuxserver/kasm:latest
     container_name: kasm
     privileged: true
-    restart: unless-stopped
+    restart: always
+    pull_policy: always
     # Network
     ports:
       - 3000:3000
       - 443:443
     # Resources
     volumes:
-      - kasm_opt:/opt
+      - kasm_data:/opt
       - kasm_profiles:/profiles #optional
+      - /dev/input:/dev/input #optional
+      - /run/udev/data:/run/udev/data #optional
     # Variables
     environment:
       - KASM_PORT=443
+
+volumes:
+  kasm_data:
+    driver: local
+  kasm_profiles:
+    driver: local

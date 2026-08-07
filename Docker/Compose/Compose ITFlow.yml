@@ -4,7 +4,8 @@ services:
     image: itfloworg/itflow:latest
     container_name: itflow
     platform: linux/amd64
-    restart: unless-stopped
+    restart: always
+    pull_policy: always
     depends_on: 
       - itflow-db
     # Network
@@ -35,8 +36,9 @@ services:
   itflow-db:
     # Attributes
     image: mariadb:10.11.6
-    container_name: itflow-db    
+    container_name: itflow-db
     restart: always
+    pull_policy: always
     # Network
     hostname: itflow-db
     networks:
@@ -63,6 +65,6 @@ networks:
 
 volumes:
   itflow:
-    driver: local  
+    driver: local
   itflow-db:
     driver: local

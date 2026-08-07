@@ -25,13 +25,13 @@ services:
       - stack.env
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
-#      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-#      - VPN_PORT_FORWARDING=on
       - SERVER_COUNTRIES=United States
-#      - SERVER_HOSTNAMES=node-us-129.protonvpn.net
       - TZ=America/Detroit
       - UPDATER_PERIOD=24h
+#      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
+#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
+#      - VPN_PORT_FORWARDING=on #optional
+#      - SERVER_HOSTNAMES=node-us-129.protonvpn.net #optional
     cap_add:
       - NET_ADMIN
 
@@ -51,8 +51,8 @@ services:
       - /mnt/plex/Downloads:/downloads
     # Variables
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
       - WEBUI_PORT=8085
 
@@ -62,6 +62,8 @@ services:
     container_name: prowlarr
     restart: always
     pull_policy: always
+    depends_on:
+      - gluetun
     # Network
     network_mode: service:gluetun
     # Resources
@@ -69,8 +71,8 @@ services:
       - prowlarr:/config
     # Variables
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
 
   sonarr:
@@ -79,6 +81,8 @@ services:
     container_name: sonarr
     restart: always
     pull_policy: always
+    depends_on:
+      - gluetun
     # Network
     network_mode: service:gluetun
     # Resources
@@ -88,8 +92,8 @@ services:
       - /mnt/plex:/plex
     # Variables
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
 
   radarr:
@@ -98,6 +102,8 @@ services:
     container_name: radarr
     restart: always
     pull_policy: always
+    depends_on:
+      - gluetun
     # Network
     network_mode: service:gluetun
     # Resources
@@ -107,8 +113,8 @@ services:
       - /mnt/plex:/plex
     # Variables
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
 
   lidarr:
@@ -117,6 +123,8 @@ services:
     container_name: lidarr
     restart: always
     pull_policy: always
+    depends_on:
+      - gluetun
     # Network
     network_mode: service:gluetun
     # Resources
@@ -126,8 +134,8 @@ services:
       - /mnt/plex:/plex
     # Variables
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
 
   overseerr:
@@ -153,13 +161,65 @@ services:
     container_name: flaresolverr
     restart: always
     pull_policy: always
+    depends_on:
+      - gluetun
     # Network
     network_mode: service:gluetun
-    # Resources
+    # Variables
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false
       - CAPTCHA_SOLVER=none
+      - TZ=America/Detroit
+
+  tdarr:
+    # Attributes
+    container_name: tdarr
+    image: ghcr.io/haveagitgat/tdarr:latest
+    restart: always
+    pull_policy: always
+    # Network
+    ports:
+      - 8265:8265 # webUI port
+      - 8266:8266 # server port
+    # Resources
+    volumes:
+      - /app/tdarr/server:/app/server
+      - /app/tdarr/configs:/app/configs
+      - /app/tdarr/logs:/app/logs
+      - /mnt/plex:/media
+      - /mnt/tdarr/cache:/temp
+    # Variables
+    environment:
+      - TZ=America/Detroit
+      - PUID=1000
+      - PGID=1000
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
+      - internalNode=false
+      - inContainer=true
+      - auth=true
+
+  bazarr:
+    # Attributes
+    image: lscr.io/linuxserver/bazarr
+    container_name: bazarr
+    restart: always
+    pull_policy: always
+    depends_on:
+      - gluetun
+    # Network
+    network_mode: service:gluetun
+    # Resources
+    volumes:
+      - bazarr:/config
+      - /mnt/plex/Movies:/movies
+      - /mnt/plex/Shows:/shows
+    # Variables
+    environment:
+      - PUID=1000
+      - PGID=1000
       - TZ=America/Detroit
 
 volumes:
@@ -176,4 +236,6 @@ volumes:
   prowlarr:
     driver: local
   overseerr:
+    driver: local
+  bazarr:
     driver: local

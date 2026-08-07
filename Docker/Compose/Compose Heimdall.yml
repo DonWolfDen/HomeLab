@@ -3,7 +3,7 @@ services:
     # Attributes
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:

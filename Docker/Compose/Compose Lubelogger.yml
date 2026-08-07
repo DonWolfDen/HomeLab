@@ -1,32 +1,44 @@
 services:
   lubelogger:
+    # Attributes
     image: ghcr.io/hargata/lubelogger # Replace with the correct image tag or version
     container_name: lubelogger_container
+    restart: always
+    pull_policy: always
+    depends_on:
+      - db
+    # Network
     ports:
       - "8911:8080" # Adjust the ports based on the application setup
+    # Resources
+    volumes:
+      - ./data:/var/lib/lubeloger # Adjust the volume path based on your needs
+    # Variables
     environment:
       - DB_HOST=db
       - DB_PORT=3307
       - DB_USER=lubeloger_user
       - DB_PASSWORD=secret_password
       - DB_NAME=lubeloger_db
-    volumes:
-      - ./data:/var/lib/lubeloger # Adjust the volume path based on your needs
-    depends_on:
-      - db
 
   db:
+    # Attributes
     image: mysql:5.7
     container_name: mysql_lubelogger
+    restart: always
+    pull_policy: always
+    # Network
+    ports:
+      - "3307:3306"
+    # Resources
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    # Variables
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: lubeloger_db
       MYSQL_USER: lubeloger_user
       MYSQL_PASSWORD: secret_password
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-    ports:
-      - "3307:3306"
 
 volumes:
   mysql_data:

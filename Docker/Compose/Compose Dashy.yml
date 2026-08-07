@@ -1,9 +1,9 @@
 services:
-  dashy:
+  dashyIn:
     # Attributes
-    image: lissy93/dashy
+    image: lissy93/dashy:latest
     container_name: dashy
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:
@@ -12,8 +12,13 @@ services:
     volumes:
       - /app/dashy/conf.yml:/app/user-data/conf.yml
     # Variables
+    env_file:
+      - stack.env
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/Detroit
       - NODE_ENV=production
+      - preventLocalSave=true
+#      - BASIC_AUTH_USERNAME=username #optional
+#      - BASIC_AUTH_PASSWORD=password #optional

@@ -3,13 +3,13 @@ services:
     # Attributes
     image: ghcr.io/kiwix/kiwix-serve
     container_name: kiwix
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
-     ports:
+    ports:
       - 8000:8080
     # Resources
     volumes:
       - /mnt/zim/:/data
-    # Interation
+    # Interaction
     command: '*.zim'
