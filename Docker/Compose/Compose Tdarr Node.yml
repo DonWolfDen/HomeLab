@@ -1,0 +1,29 @@
+services:
+  tdarr-node:
+    container_name: tdarr-node
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    restart: always
+    environment:
+      - TZ=America/Detroit
+      - PUID=1000
+      - PGID=1000
+      - nodeName=${HOSTNAME}
+      - serverIP= # Tdarr server host IP
+      - serverPort=8266
+      - inContainer=true
+      - ffmpegVersion=7
+      - apiKey=${TDARR_API_KEY?Missing TDARR_API_KEY in .env file!}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - /app/tdarr/configs:/app/configs
+      - /app/tdarr/logs:/app/logs
+      - /mnt/plex:/media
+      - /mnt/tdarr/cache:/temp
+    group_add:
+      - 107
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# TDARR_API_KEY

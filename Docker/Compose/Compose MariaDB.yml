@@ -16,12 +16,19 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Detroit
-      - MYSQL_ROOT_PASSWORD=ROOT_ACCESS_PASSWORD
-      - MYSQL_DATABASE=USER_DB_NAME #optional
-      - MYSQL_USER=MYSQL_USER #optional
-      - MYSQL_PASSWORD=DATABASE_PASSWORD #optional
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+      - MARIADB_DATABASE=${DB_NAME:?Missing DB_NAME in .env file!} #optional
+      - MARIADB_USER=${DB_USER:?Missing DB_USER in .env file!} #optional
+      - MARIADB_PASSWORD=${DB_PASS:?Missing DB_PASS in .env file!} #optional
       - REMOTE_SQL=http://URL1/your.sql,https://URL2/your.sql #optional
 
 volumes:
    mariadb-data:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# DB_NAME
+# DB_USER
+# DB_PASS

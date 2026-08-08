@@ -1,48 +1,60 @@
 services:
   paperless:
+    # Attributes
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
     restart: always
-    environment:
-      PAPERLESS_REDIS: redis://redis:6379
-      PAPERLESS_DBHOST: db
-      PAPERLESS_DBUSER: paperless
-      PAPERLESS_DBPASS: paperlesspassword
-      PAPERLESS_DBNAME: paperless
-      PAPERLESS_URL: https://example.com
-                  # For use with a Cloudflare Tunnel, a URL needs to be set. https://tinyurl.com/2s8f3sfb
-                  # Add your trusted origins (replace example.com with your domain)
-
+    pull_policy: always
+    # Network
     ports:
       - 8910:8000
+    # Resources
     volumes:
       - /path/to/paperless/data:/usr/src/paperless/data
       - /path/to/paperless/media:/usr/src/paperless/media
       - /path/to/paperless/export:/usr/src/paperless/export
       - /path/to/paperless/consume:/usr/src/paperless/consume
+    # Variables
+    environment:
+      PAPERLESS_REDIS: redis://redis:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: ${DB_USER:-paperless}
+      PAPERLESS_DBNAME: ${DB_NAME:-paperless}
+      PAPERLESS_DBPASS: ${DB_PASS:?Missing PAPERLESS_DBPASS in .env file!}
+      PAPERLESS_URL: ${PAPERLESS_URL:-https://example.com}
+                  # For use with a Cloudflare Tunnel, a URL needs to be set. https://tinyurl.com/2s8f3sfb
+                  # Add your trusted origins (replace example.com with your domain)
 
   db:
+    # Attributes
     image: postgres:13
     container_name: paperless-db
     restart: always
-    environment:
-      POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: paperlesspassword
-      POSTGRES_DB: paperless
+    pull_policy: always
+    # Resources
     volumes:
-      - /path/to/postgres/data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    # Variables
+    environment:
+      POSTGRES_USER: ${DB_USER:?Missing DB_USER in .env file!}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Missing DB_PASSWORD in .env file!}
+      POSTGRES_DB: ${DB_NAME:?Missing DB_NAME in .env file!}
 
   redis:
+    # Attributes
     image: redis:alpine
     container_name: paperless-redis
     restart: always
+    pull_policy: always
+    # Resources
     volumes:
-      - /path/to/redis/data:/data
+      - redis_data:/data
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
-```
+    driver: local
 
 ### Step-by-Step to Create the Admin User:
 

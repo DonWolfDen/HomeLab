@@ -10,10 +10,10 @@ services:
       - mariadb-vikunja:/var/lib/mysql
     # Variables
     environment:
-      MYSQL_ROOT_PASSWORD: changeme
-      MYSQL_USER: vikunja-db-user
-      MYSQL_PASSWORD: dbpass
-      MYSQL_DATABASE: vikunja-db
+      MYSQL_DATABASE: ${DB_NAME:-vikunja-db}
+      MYSQL_USER: ${DB_USER:-vikunja-db-user}
+      MYSQL_PASSWORD: ${DB_PASS:?Missing DB_PASS in .env file!}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT:?Missing DB_ROOT in .env file!}
     # Interaction
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
@@ -33,15 +33,23 @@ services:
       - vikunja:/app/vikunja/files
     # Variables
     environment:
-      VIKUNJA_SERVICE_ENABLEREGISTRATION: false
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: "false"
       VIKUNJA_DATABASE_HOST: mariadb-vikunja
-      VIKUNJA_DATABASE_PASSWORD: dbpass
+      VIKUNJA_DATABASE_PASSWORD: ${DB_PASS:?Missing DB_PASS in .env file!}
       VIKUNJA_DATABASE_TYPE: mysql
-      VIKUNJA_DATABASE_USER: vikunja-db-user
-      VIKUNJA_DATABASE_DATABASE: vikunja-db
+      VIKUNJA_DATABASE_USER: ${DB_USER:-vikunja-db-user}
+      VIKUNJA_DATABASE_DATABASE: ${DB_NAME:-vikunja-db}
 
 volumes:
   vikunja:
     driver: local
   mariadb-vikunja:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# DB_NAME
+# DB_USER
+# DB_PASS
+# DB_ROOT

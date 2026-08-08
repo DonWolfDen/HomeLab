@@ -6,10 +6,13 @@ services:
     restart: always
     pull_policy: always
     # Variables
-    env_file:
-      - stack.env
     environment:
       - TZ=America/Detroit
-#      - TUNNEL_TOKEN= # mytokenfromcloudflare-com
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN:?Missing TUNNEL_TOKEN in .env file!}
     # Interaction
     command: tunnel run
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# TUNNEL_TOKEN

@@ -11,6 +11,6 @@ services:
     # Resources
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-      - ./homarr/configs:/app/data/configs
-      - ./homarr/icons:/app/public/icons
-      - ./homarr/data:/data
+      - /app/homarr/configs:/app/data/configs
+      - /app/homarr/icons:/app/public/icons
+      - /app/homarr/data:/data

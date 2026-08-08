@@ -9,12 +9,17 @@ services:
       - 11111:80
     # Resources
     volumes:
-      - vw-data:/data # the path before the : can be changed
+      - vw-data:/data
     # Variables
     environment:
-      # DOMAIN: "https://vault.example.com"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
-      SIGNUPS_ALLOWED: "true" # Deactivate this with "false" after you have created your account so that no strangers can register
+      DOMAIN: ${DOMAIN_URL:?Missing DOMAIN_URL in .env file!}
+      SIGNUPS_ALLOWED: "true" # Remember to disable signup after setup
 
 volumes:
   vw-data:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# DOMAIN_URL

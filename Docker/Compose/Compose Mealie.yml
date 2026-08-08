@@ -13,13 +13,18 @@ services:
       - mealie:/app/data/
     # Variables
     environment:
-      - ALLOW_SIGNUP=true
+      - ALLOW_SIGNUP=true # Remember to disable signup after setup
       - PUID=1000
       - PGID=1000
       - TZ=America/Detroit
       - MAX_WORKERS=1
       - WEB_CONCURRENCY=1
-      - BASE_URL= # IP address of host
+      - BASE_URL=${BASE_URL:?Missing BASE_URL in .env file!}
 volumes:
   mealie:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# BASE_URL

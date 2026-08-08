@@ -4,18 +4,18 @@ services:
     # Attributes
     image: mariadb:10.6
     container_name: nextcloud-db
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Resources
     volumes:
       - nextcloud-db:/var/lib/mysql
     # Variables
     environment:
-      - MYSQL_ROOT_PASSWORD=MySecretPassword123
-      - MYSQL_PASSWORD=MySecretPassword123
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
       - TZ=America/Detroit
+      - MYSQL_DATABASE=${MYSQL_NAME:-nextcloud}
+      - MYSQL_USER=${MYSQL_USER:-nextcloud}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Missing MYSQL_PASSWORD in .env file!}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT:?Missing MYSQL_ROOT in .env file!}
     # Interaction
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
 
@@ -23,7 +23,7 @@ services:
     # Attributes
     image: nextcloud
     container_name: nextcloud
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:
@@ -36,13 +36,13 @@ services:
       - /mnt/nextcloud:/data
     # Variables
     environment:
-      - MYSQL_PASSWORD=MySecretPassword123
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_HOST=nextcloud-db
-      - NEXTCLOUD_DATA_DIR=/data
-      - NEXTCLOUD_TRUSTED_DOMAINS=your.domain.com # add your docker host IP with the port 8008
       - TZ=America/Detroit
+      - NEXTCLOUD_DATA_DIR=/data
+      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_URL:?Missing NEXTCLOUD_URL in .env file!} # add your docker host IP with the port 8008
+      - MYSQL_HOST=nextcloud-db
+      - MYSQL_DATABASE=${MYSQL_NAME:-nextcloud}
+      - MYSQL_USER=${MYSQL_USER:-nextcloud}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:?Missing MYSQL_PASSWORD in .env file!}
 
 volumes:
   nextcloud:
@@ -72,3 +72,12 @@ volumes:
 #volumes:
 #  nextcloud:
 #    external: true
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# =========================================
+# MYSQL_ROOT
+# MYSQL_PASSWORD
+# MYSQL_NAME
+# MYSQL_USER
+# NEXTCLOUD_URL

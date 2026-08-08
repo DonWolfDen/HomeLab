@@ -16,8 +16,7 @@ services:
       - HBOX_LOG_LEVEL=info
       - HBOX_LOG_FORMAT=text
       - HBOX_WEB_MAX_UPLOAD_SIZE=100
-      - HBOX_OPTIONS_ALLOW_REGISTRATION=true
-          # Make sure to disable registration
+      - HBOX_OPTIONS_ALLOW_REGISTRATION=true # Remember to disable registration after setup
       - TZ=America/Detroit
 
 volumes:

@@ -1,9 +1,9 @@
 services:
   ollama:
     # Attributes
-    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    image: ollama/ollama:latest
     container_name: ollama
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Resources
     volumes:
@@ -24,9 +24,9 @@ services:
 
   open-webui:
     # Attributes
-    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
+    image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     depends_on:
       - ollama

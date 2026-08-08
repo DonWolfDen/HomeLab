@@ -12,14 +12,14 @@ services:
       - "8911:8080" # Adjust the ports based on the application setup
     # Resources
     volumes:
-      - ./data:/var/lib/lubeloger # Adjust the volume path based on your needs
+      - lubeloger_data:/var/lib/lubeloger # Adjust the volume path based on your needs
     # Variables
     environment:
       - DB_HOST=db
       - DB_PORT=3307
-      - DB_USER=lubeloger_user
-      - DB_PASSWORD=secret_password
-      - DB_NAME=lubeloger_db
+      - DB_NAME=${DB_NAME?Missing DB_NAME in .env file!}
+      - DB_USER=${DB_USER?Missing DB_USER in .env file!}
+      - DB_PASSWORD=${DB_PASS?Missing DB_PASS in .env file!}
 
   db:
     # Attributes
@@ -32,16 +32,25 @@ services:
       - "3307:3306"
     # Resources
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     # Variables
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: lubeloger_db
-      MYSQL_USER: lubeloger_user
-      MYSQL_PASSWORD: secret_password
+      - MYSQL_DATABASE=${DB_NAME:?Missing DB_NAME in .env file!}
+      - MYSQL_USER=${DB_USER:?Missing DB_USER in .env file!}
+      - MYSQL_PASSWORD=${DB_PASS:?Missing DB_PASS in .env file!}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT:?Missing DB_ROOT in .env file!}
 
 volumes:
   mysql_data:
     driver: local
-  data:
+  lubeloger_data:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# DB_NAME
+# DB_USER
+# DB_PASS
+# DB_ROOT
+

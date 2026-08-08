@@ -1,93 +1,100 @@
 services:
-  mc-pub:
+  mc-public:
     # Attributes
     image: itzg/minecraft-server
-    container_name: mc-pub
-    restart: unless-stopped
+    container_name: mc-public
+    restart: always
     pull_policy: always
     # Network
     ports:
       - 25565:25565
     # Resources
     volumes:
-      - mc-pub:/data
+      - mc-public:/data
     # Variables
     environment:
       SERVER_NAME: "Minecraft Public"
-      EULA: true
-      SNOOPER_ENABLED: false
-      ALLOW_CHEATS: true
+      EULA: "true"
+      SNOOPER_ENABLED: "false"
+      ALLOW_CHEATS: "true"
       RCON_CMDS_STARTUP:  |-
-        /op YourMCusername
+        /op ${MC_USERNAME:?Missing MC_USERNAME in .env file!}
     # Interaction
-    tty: true
-    stdin_open: true
+    tty: "true"
+    stdin_open: "true"
 
-  mc-pmon:
-    # Attributes
-    image: itzg/minecraft-server:java8-multiarch
-    container_name: mc-pmon
-    restart: unless-stopped
-    pull_policy: always
-    # Network
-    ports:
-      - 25564:25565
-    # Resources
-    volumes:
-      - mc-pmon:/data
-    # Variables
-    env_file:
-      - stack.env
-    environment:
-      SERVER_NAME: "Minecraft Pixelmon"
-      EULA: true
-      SNOOPER_ENABLED: false
-      ALLOW_CHEATS: true
-      MOD_PLATFORM: AUTO_CURSEFORGE
-#      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
-      CF_SLUG: the-pixelmon-modpack
-      CF_FILENAME_MATCHER: "9.1.11"
-      MEMORY: 4G
-      RCON_CMDS_STARTUP:  |-
-        /op YourMCusername
-    # Interaction
-    tty: true
-    stdin_open: true
-
-  mc-priv:
+  mc-private:
     # Attributes
     image: itzg/minecraft-server
-    container_name: mc-priv
-    restart: unless-stopped
+    container_name: mc-private
+    restart: always
     pull_policy: always
     # Network
     ports:
       - 25563:25565
     # Resources
     volumes:
-      - mc-priv:/data
+      - mc-private:/data
     # Variables
     environment:
       SERVER_NAME: "Minecraft Private"
-      EULA: true
-      SNOOPER_ENABLED: false
-      ALLOW_CHEATS: true
-      ENABLE_WHITELIST: true
-      ENFORCE_WHITELIST: true
-      WHITELIST: "YourMCusername,YourfriendsMCusername"
+      EULA: "true"
+      SNOOPER_ENABLED: "false"
+      ALLOW_CHEATS: "true"
+      ENABLE_WHITELIST: "true"
+      ENFORCE_WHITELIST: "true"
+      WHITELIST: "${MC_USERNAME:?Missing MC_USERNAME in .env file!},${WHITELIST_USERS:?Missing WHITELIST_USERS in .env file!}"
       RCON_CMDS_STARTUP: |-
-        /op YourMCusername
-        /op YourfriendsMCusername
+        /op ${MC_USERNAME:?Missing MC_USERNAME in .env file!}
+        /op ${OP_USERS:?Missing OP_USERS in .env file!}
         /gamerule drowningDamage false
         /gamerule keepInventory true
     # Interaction
-    tty: true
-    stdin_open: true
+    tty: "true"
+    stdin_open: "true"
+
+  mc-pokemon:
+    # Attributes
+    image: itzg/minecraft-server:java8-multiarch
+    container_name: mc-pokemon
+    restart: always
+    pull_policy: always
+    # Network
+    ports:
+      - 25564:25565
+    # Resources
+    volumes:
+      - mc-pokemon:/data
+    # Variables
+    env_file:
+      - stack.env
+    environment:
+      SERVER_NAME: "Minecraft Pixelmon"
+      EULA: "true"
+      SNOOPER_ENABLED: "false"
+      ALLOW_CHEATS: "true"
+      MOD_PLATFORM: AUTO_CURSEFORGE
+#      CF_API_KEY: ## get an API key from auto curse forge and put a $ before every $
+      CF_SLUG: the-pixelmon-modpack
+      CF_FILENAME_MATCHER: "9.1.11"
+      MEMORY: 4G
+      RCON_CMDS_STARTUP:  |-
+        /op ${MC_USERNAME:?Missing MC_USERNAME in .env file!}
+    # Interaction
+    tty: "true"
+    stdin_open: "true"
 
 volumes:
-  mc-pub:
+  mc-public:
     driver: local
-  mc-priv:
+  mc-private:
     driver: local
-  mc-pmon:
+  mc-pokemon:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# MC_USERNAME
+# WHITELIST_USERS
+# OP_USERS

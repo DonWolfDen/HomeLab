@@ -3,7 +3,7 @@ services:
     # Attributes
     image: pihole/pihole
     container_name: pihole
-    restart: unless-stopped
+    restart: always
     pull_policy: always
     # Network
     ports:
@@ -19,10 +19,15 @@ services:
       - stack.env
     environment:
       - TZ=America/Detroit
-#      - WEBPASSWORD='set a secure password here or it will be random'
+      - WEBPASSWORD=${WEBPASSWORD:?Missing WEBPASSWORD in .env file!}
 
 volumes:
   pihole:
     driver: local
   dnsmasq.d:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# WEBPASSWORD

@@ -3,7 +3,7 @@ services:
     # Attributes
     image: lscr.io/linuxserver/kasm:latest
     container_name: kasm
-    privileged: true
+    privileged: "true"
     restart: always
     pull_policy: always
     # Network

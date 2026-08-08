@@ -3,7 +3,8 @@ services:
     # Attributes
     image: ghcr.io/haveagitgat/tdarr
     container_name: tdarr
-    restart: unless-stopped
+    restart: always
+    pull_policy: always
     # Network
     network_mode: bridge
     ports:
@@ -15,21 +16,20 @@ services:
       - tdarr_configs:/app/configs
       - tdarr_logs:/app/logs
       - /mnt/plex:/media
-      - /transcode_cache:/temp
+      - /mnt/tdarr/cache:/temp
     # Variables
     environment:
       - TZ=America/Detroit
       - PUID=1000
       - PGID=1000
       - UMASK_SET=002
-      - serverIP= ## docker host IP
+      - serverIP=${SERVER_IP:?Missing SERVER_IP in .env file!}
       - serverPort=8266
       - webUIPort=8265
       - internalNode=true
       - inContainer=true
       - ffmpegVersion=6
-      - nodeName= ## docker host hostname
-      - TZ=America/Detroit
+      - nodeName=${HOSTNAME}
 
 volumes:
   tdarr_server:
@@ -38,3 +38,8 @@ volumes:
     driver: local
   tdarr_logs:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# SERVER_IP

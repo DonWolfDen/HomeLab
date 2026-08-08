@@ -101,3 +101,9 @@ volumes:
     driver: local
   valkey-data:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# SEARXNG_HOSTNAME
+# LETSENCRYPT_EMAIL

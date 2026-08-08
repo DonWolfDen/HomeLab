@@ -10,6 +10,6 @@ services:
       - 8000:8080
     # Resources
     volumes:
-      - /mnt/zim/:/data
+      - /mnt/zim:/data
     # Interaction
     command: '*.zim'

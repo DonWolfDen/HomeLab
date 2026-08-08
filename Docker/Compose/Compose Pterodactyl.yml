@@ -1,69 +1,27 @@
-x-common:
-  database:
-    &db-environment
-    # Do not remove the "&db-password" from the end of the line below, it is important
-    # for Panel functionality.
-    MYSQL_PASSWORD: &db-password "CHANGE_ME"
-    MYSQL_ROOT_PASSWORD: "CHANGE_ME_TOO"
+services:  
   panel:
-    &panel-environment
-    # This URL should be the URL that your reverse proxy routes to the panel server
-    APP_URL: "https://10.20.30.150"
-    # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
-    APP_TIMEZONE: "America/Detroit"
-    # APP_SERVICE_AUTHOR: "noreply@donwolf.com"
-    # TRUSTED_PROXIES: "*" # Set this to your proxy IP
-    # Uncomment the line below and set to a non-empty value if you want to use Let's Encrypt
-    # to generate an SSL certificate for the Panel.
-    # LE_EMAIL: ""
-  #mail:
-  #  &mail-environment
-  #  MAIL_FROM: "noreply@donwolf.com"
-  #  MAIL_DRIVER: "smtp"
-  #  MAIL_HOST: "mail"
-  #  MAIL_PORT: "1025"
-  #  MAIL_USERNAME: ""
-  #  MAIL_PASSWORD: ""
-  #  MAIL_ENCRYPTION: "true"
-
-#
-# ------------------------------------------------------------------------------------------
-# DANGER ZONE BELOW
-#
-# The remainder of this file likely does not need to be changed. Please only make modifications
-# below if you understand what you are doing.
-#
-services:
-  database:
-    image: mariadb:10.5
-    restart: always
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - "/srv/pterodactyl/database:/var/lib/mysql"
-    environment:
-      <<: *db-environment
-      MYSQL_DATABASE: "panel"
-      MYSQL_USER: "pterodactyl"
-  cache:
-    image: redis:alpine
-    restart: always
-  panel:
+    # Attributes
     image: ghcr.io/pterodactyl/panel:latest
     restart: always
+    pull_policy: always
+    # Network
     ports:
       - "80:80"
       - "443:443"
     links:
       - database
       - cache
+    # Resources
     volumes:
       - "/srv/pterodactyl/var/:/app/var/"
       - "/srv/pterodactyl/nginx/:/etc/nginx/http.d/"
       - "/srv/pterodactyl/certs/:/etc/letsencrypt/"
       - "/srv/pterodactyl/logs/:/app/storage/logs"
+    # Variables
     environment:
-      <<: [*panel-environment, *mail-environment]
-      DB_PASSWORD: *db-password
+      APP_URL: "https://${DOMAIN_URL:?Missing DOMAIN_URL in .env file!}"
+      APP_TIMEZONE: "America/Detroit"
+      DB_PASSWORD: ${DB_PASS:?Missing DB_PASS in .env file!}
       APP_ENV: "production"
       APP_ENVIRONMENT_ONLY: "false"
       CACHE_DRIVER: "redis"
@@ -72,8 +30,39 @@ services:
       REDIS_HOST: "cache"
       DB_HOST: "database"
       DB_PORT: "3306"
+
+  database:
+    # Attributes
+    image: mariadb:10.5
+    restart: always
+    pull_policy: always
+    # Resources
+    volumes:
+      - "/srv/pterodactyl/database:/var/lib/mysql"
+    # Variables
+    environment:
+      MYSQL_PASSWORD: ${DB_PASS:?Missing DB_PASS in .env file!}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT:?Missing DB_ROOT in .env file!}
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+    # Interaction
+    command: --default-authentication-plugin=mysql_native_password
+
+  cache:
+    # Attributes
+    image: redis:alpine
+    restart: always
+    pull_policy: always
+
 networks:
   default:
     ipam:
       config:
         - subnet: 172.20.0.0/16
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# DB_PASS
+# DB_ROOT
+# DOMAIN_URL

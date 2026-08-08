@@ -1,11 +1,30 @@
-services:
-  gluetun:
-    # Attributes
-    image: qmcgaw/gluetun
-    container_name: gluetun
+# ==========================================
+# REUSABLE VARIABLES
+# ==========================================
+x-variables: 
+  default_policy: &default_policy
     restart: always
     pull_policy: always
-    # Network
+  vpn-routed: &vpn-routed
+    <<: *default_policy
+    depends_on:
+     - gluetun
+    network_mode: service:gluetun
+  arr-env: &arr-env
+    PUID: 1000
+    PGID: 1000
+    TZ: &tz "America/Detroit"
+  volume-paths:
+    downloads: &vol-downloads "/mnt/plex/Downloads:/downloads"
+    plex-media: &vol-plex "/mnt/plex:/plex"
+# ==========================================
+# SERVICES
+# ==========================================
+services:
+  gluetun:
+    <<: *default_policy
+    image: qmcgaw/gluetun
+    container_name: gluetun
     ports:
       - 6881:6881 # qbittorrent
       - 6881:6881/udp # qbittorrent
@@ -15,212 +34,105 @@ services:
       - 7878:7878 # Radarr
       - 8686:8686 # Lidarr
       - 8191:8191 # FlareSolverr
-    # Resources
     volumes:
       - gluetun:/gluetun
     devices:
       - /dev/net/tun:/dev/net/tun
-    # Variables
-    env_file:
-      - stack.env
     environment:
-      - VPN_SERVICE_PROVIDER=protonvpn
-      - SERVER_COUNTRIES=United States
-      - TZ=America/Detroit
-      - UPDATER_PERIOD=24h
-#      - OPENVPN_USER=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-#      - OPENVPN_PASSWORD=# Find it at account.proton.me/u/0/vpn/OpenVpnIKEv2
-#      - VPN_PORT_FORWARDING=on #optional
-#      - SERVER_HOSTNAMES=node-us-129.protonvpn.net #optional
+      TZ: *tz
+      VPN_SERVICE_PROVIDER: protonvpn
+      SERVER_COUNTRIES: United States
+      UPDATER_PERIOD: 24h
+      OPENVPN_USER: ${OPENVPN_USER:?Missing OPENVPN_USER in .env file!} # Find this at account.proton.me/u/0/vpn/OpenVpnIKEv2
+      OPENVPN_PASSWORD: ${OPENVPN_PASSWORD:?Missing OPENVPN_PASSWORD in .env file!} # Find this at account.proton.me/u/0/vpn/OpenVpnIKEv2
+#      VPN_PORT_FORWARDING=on #optional
     cap_add:
       - NET_ADMIN
 
   qbittorrent:
-    # Attributes
+    <<: *vpn-routed
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
     volumes:
       - qbittorrent:/config
-      - /mnt/plex/Downloads:/downloads
-    # Variables
+      - *vol-downloads
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
-      - WEBUI_PORT=8085
-
-  prowlarr:
-    # Attributes
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
-    volumes:
-      - prowlarr:/config
-    # Variables
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
+      <<: *arr-env
+      WEBUI_PORT: 8085
 
   sonarr:
-    # Attributes
+    <<: *vpn-routed
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
     volumes:
       - sonarr:/config
-      - /mnt/plex/Downloads:/downloads
-      - /mnt/plex:/plex
-    # Variables
+      - *vol-downloads
+      - *vol-plex
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
+      <<: *arr-env
 
   radarr:
-    # Attributes
+    <<: *vpn-routed
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
     volumes:
       - radarr:/config
-      - /mnt/plex/Downloads:/downloads
-      - /mnt/plex:/plex
-    # Variables
+      - *vol-downloads
+      - *vol-plex
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
+      <<: *arr-env
 
   lidarr:
-    # Attributes
+    <<: *vpn-routed
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
     volumes:
       - lidarr:/config
-      - /mnt/plex/Downloads:/downloads
-      - /mnt/plex:/plex
-    # Variables
+      - *vol-downloads
+      - *vol-plex
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
-
-  overseerr:
-    # Attributes
-    image: sctx/overseerr:latest
-    container_name: overseerr
-    restart: always
-    pull_policy: always
-    # Network
-    ports:
-    - 5055:5055
-    # Resources
-    volumes:
-      - overseerr:/app/config
-    # Variables
-    environment:
-      - LOG_LEVEL=debug
-      - TZ=America/Detroit
-
-  flaresolverr:
-    # Attributes
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Variables
-    environment:
-      - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=none
-      - TZ=America/Detroit
-
-  tdarr:
-    # Attributes
-    container_name: tdarr
-    image: ghcr.io/haveagitgat/tdarr:latest
-    restart: always
-    pull_policy: always
-    # Network
-    ports:
-      - 8265:8265 # webUI port
-      - 8266:8266 # server port
-    # Resources
-    volumes:
-      - /app/tdarr/server:/app/server
-      - /app/tdarr/configs:/app/configs
-      - /app/tdarr/logs:/app/logs
-      - /mnt/plex:/media
-      - /mnt/tdarr/cache:/temp
-    # Variables
-    environment:
-      - TZ=America/Detroit
-      - PUID=1000
-      - PGID=1000
-      - serverIP=0.0.0.0
-      - serverPort=8266
-      - webUIPort=8265
-      - internalNode=false
-      - inContainer=true
-      - auth=true
+      <<: *arr-env
 
   bazarr:
-    # Attributes
+    <<: *vpn-routed
     image: lscr.io/linuxserver/bazarr
     container_name: bazarr
-    restart: always
-    pull_policy: always
-    depends_on:
-      - gluetun
-    # Network
-    network_mode: service:gluetun
-    # Resources
     volumes:
       - bazarr:/config
-      - /mnt/plex/Movies:/movies
-      - /mnt/plex/Shows:/shows
-    # Variables
+      - *vol-plex
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Detroit
+      <<: *arr-env
+
+  prowlarr:
+    <<: *vpn-routed
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    volumes:
+      - prowlarr:/config
+    environment:
+      <<: *arr-env
+
+  flaresolverr:
+    <<: *vpn-routed
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      LOG_LEVEL: info
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: none
+      TZ: *tz
+
+  overseerr:
+    <<: *default_policy
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    ports:
+      - 5055:5055
+    volumes:
+      - overseerr:/app/config
+    environment:
+      LOG_LEVEL: debug
+      TZ: *tz
 
 volumes:
   gluetun:
@@ -239,3 +151,9 @@ volumes:
     driver: local
   bazarr:
     driver: local
+
+# ==========================================
+# ENVIRONMENT VARIABLES
+# ==========================================
+# OPENVPN_USER
+# OPENVPN_PASSWORD
