@@ -6,9 +6,16 @@ API_KEY="(access_token)" # Create access token in portainer > my account
 # 1. Fetch stacks (-k bypasses self-signed certificate errors)
 STACKS=$(curl -s -k -H "X-API-Key: $API_KEY" "$PORTAINER_URL/api/stacks")
 
-# Check if the API returned anything valid
-if [ -z "$STACKS" ] || [ "$STACKS" == "[]" ]; then
-    echo "Error: Received empty response or no stacks found. Check your URL, API key, or network."
+# Check if the response is a valid JSON array (catches 401 Unauthorized, bad URLs, etc.)
+if ! echo "$STACKS" | jq -e 'type == "array"' >/dev/null 2>&1; then
+    echo "Error: API request failed. Check your API key, URL, or permissions."
+    echo "Server Response: $STACKS"
+    exit 1
+fi
+
+# Check if the array is empty
+if [ "$STACKS" == "[]" ]; then
+    echo "Error: No stacks found."
     exit 1
 fi
 
